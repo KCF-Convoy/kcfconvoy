@@ -47,10 +47,14 @@ class Compound: # KCF-Convoy
         #nx.draw_networkx_edge_labels(self.graph, pos, edge_labels=edge_labels, fontsize=3, font_color='b')
         plt.draw()
 
-    def find_seq(self, length):
+    def find_seq(self, length, bidirectonal=True):
         for i in self.graph.nodes():
             for j in self.graph.nodes():
                 if (length == 3) and (i == j):
+                    continue
+                if bidirectonal:
+                    pass
+                elif i > j:
                     continue
                 for seq in nx.all_simple_paths(self.graph, i, j, cutoff=(length + 1)):
                     if len(seq) == 2:
@@ -150,7 +154,7 @@ class Compound: # KCF-Convoy
         return self.graph.node[atmidx]['symbol']
 
     def triplets(self):
-        return self.find_seq(3)
+        return self.find_seq(3, bidirectonal=False)
 
     def vicinities(self):
         return [(j, [i for i in nx.all_neighbors(self.graph, j)]) 
