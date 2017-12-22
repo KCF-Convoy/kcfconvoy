@@ -2,7 +2,7 @@
 # coding: utf-8
 from setuptools import setup, find_packages
 from kcfconvoy import __author__, __version__, __license__
- 
+
 setup(
         name             = 'kcfconvoy',
         version          = __version__,
@@ -13,5 +13,11 @@ setup(
         url              = 'https://github.com/KCF-Convoy',
         keywords         = 'sample pip github python',
         packages         = find_packages(),
-        install_requires = [],
+        install_requires = ["matplotlib",
+                            "networkx",
+                            "numpy",
+                            "IPython",
+                            "pandas",
+                            "pillow"
+                            ],
         )

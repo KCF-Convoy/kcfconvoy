@@ -23,7 +23,7 @@ class KcfMatrix:
             for j, _str in enumerate(kcfvec.strs):
                 self.all_mat[i][self.all_strs.index(_str)] = kcfvec.counts[j]
         self.calc_kcf_mat()
-        
+
     def calc_kcf_mat(self, ratio = 400):
         kcf_matT = self.all_mat.T
         min_cpd = max(len(self.all_mat) / ratio, 1)
@@ -41,7 +41,7 @@ class KcfV:
         self.n_nodes = []
         self.ring_string = []
         self.subs_string = []
-        
+
     def add_str(self, _str, n_node, _type, lev):
         if _str not in self.strs:
             self.strs.append(_str)
@@ -153,7 +153,7 @@ def kcf_vec(c1, levels = [0, 1, 2], attributes = [0, 1, 2, 3, 4, 5], maxsublengt
     kcfv.keggatom = rdkmol_to_keggatoms(c1.mol, data=True)
     if kcfv.keggatom == {}:
         return kcfv
-        
+
     c1c = copy.deepcopy(c1)
     for edge in c1c.graph.edges():
         ele1 = c1c.symbol(edge[0])
@@ -161,7 +161,7 @@ def kcf_vec(c1, levels = [0, 1, 2], attributes = [0, 1, 2, 3, 4, 5], maxsublengt
         if (ele1 == 'C' and ele2 != 'C') or (ele1 != 'C' and ele2 == 'C'):
             c1c.graph.remove_edge(edge[0], edge[1])
     subgraphs = nx.connected_component_subgraphs(c1c.graph)
-        
+
     skeleton = []
     inorganic = []
     for subg in subgraphs:
@@ -171,7 +171,7 @@ def kcf_vec(c1, levels = [0, 1, 2], attributes = [0, 1, 2, 3, 4, 5], maxsublengt
             skeleton.append(','.join([str(n) for n in sorted(subg.nodes())]))
         else:
             inorganic.append(','.join([str(n) for n in sorted(subg.nodes())]))
-    
+
     pinpath1 = [pinpath(subg) for subg in subgraphs]
     pinpath2 = [[[cutoff, pinpath(subg, cutoff)] for subg in subgraphs]
                 for cutoff in range(4, maxsublength + 1)]
@@ -186,14 +186,14 @@ def kcf_vec(c1, levels = [0, 1, 2], attributes = [0, 1, 2, 3, 4, 5], maxsublengt
             for bond in c1.graph.edges():
                 s = ("-").join(sorted([kcfv.keggatom[i][lev] for i in bond]))
                 kcfv.add_str(s, 2, 'bond', lev)
-        
+
         if 2 in attributes:
             for triplet in c1.triplets():
                 s1 = ("-").join([kcfv.keggatom[i][lev] for i in triplet])
                 s2 = ("-").join(reversed([kcfv.keggatom[i][lev] for i in triplet]))
                 s = sorted([s1, s2])[0]
                 kcfv.add_str(s, 3, 'triplet', lev)
-        
+
         if 3 in attributes:
             for vicinity in c1.vicinities():
                 if len(vicinity[1]) < 3:
@@ -204,7 +204,7 @@ def kcf_vec(c1, levels = [0, 1, 2], attributes = [0, 1, 2, 3, 4, 5], maxsublengt
                     s += ',2-' + vic_tmp[t][0]
                 kcfv.add_str(s, 1 + len(vicinity[1]), 'vicinity', lev)
             #print(vicinity, keggatom1[vicinity[0]][lev], vic_tmp, s)
-        
+
         #ring_string = {}
         kcfv.ring_string.append({})
         if 4 in attributes:
@@ -288,7 +288,7 @@ def pinpath(graph, cutoff=False):
                 if i == j:
                     length -= 1
                 skeldic[key].append([0 - length, seq])
-    return skeldic    
+    return skeldic
 
 def rdkmol_to_kcf(mol, id='NoName'):
     lines = ''
@@ -298,7 +298,7 @@ def rdkmol_to_kcf(mol, id='NoName'):
     atoms, bonds = get_coordinates(mol)
     for atom in sorted(atoms.items()):
         lines += "            "
-        lines += "%-3d %-3s %-2s  %8s  %8s\n" % (atom[0] + 1, labels[atom[0]]['kegg_atom'], 
+        lines += "%-3d %-3s %-2s  %8s  %8s\n" % (atom[0] + 1, labels[atom[0]]['kegg_atom'],
                                                  labels[atom[0]]['atom_species'], atom[1][0], atom[1][1])
     lines += "BOND        %-5d\n" % (mol.GetNumBonds())
     for idx, bond in enumerate(bonds):
@@ -744,29 +744,28 @@ def similarity(v1, v2, n_nodes=range(99), levels=[0, 1, 2]):
         else:
             a1.append(0)
             a2.append(v2.counts[j])
-        
+
     f1 = np.array(a1)
     f2 = np.array(a2)
-    
+
     # 谷本係数の計算に必要な成分
     only1 = sum([i if i > 0 else 0 for i in (f1 - f2)])
     only2 = sum([i if i > 0 else 0 for i in (f2 - f1)])
     both12 = sum([i if i < j else j for i, j in zip(f1, f2)])
-    
+
     # 重みつき谷本係数
     x = both12 / (only1 + only2 + both12)
     if (only1 + only2 + both12) == 0:
         x = 0
-    
+
     # 分子１が分子２中でどのくらい保存されているかを表す係数
     x12 = both12 / (only1 + both12)
     if (only1 + both12) == 0:
         x12 = 0
-    
+
     # 分子２が分子１中でどのくらい保存されているかを表す係数
     x21 = both12 / (only2 + both12)
     if (only2 + both12) == 0:
         x21 = 0
-    
-    return (x, x12, x21)
 
+    return (x, x12, x21)
