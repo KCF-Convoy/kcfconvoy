@@ -2,7 +2,7 @@
 from IPython.utils.io import rprint
 from rdkit import Chem
 from rdkit.Chem import AllChem
-from renx.Compound import Compound
+from kcfconvoy.Compound import Compound
 from time import sleep
 import networkx as nx
 import os
@@ -31,7 +31,7 @@ class Library:
             self.fps = [Chem.PatternFingerprint(cpd.mol, fpSize=1024) for cpd in self.cpds]
         return True
 
-    def input_from_kegg(self, cid, wait=1): # e.g., cid = C00002 
+    def input_from_kegg(self, cid, wait=1): # e.g., cid = C00002
         kegg_dir = "kegg"
         if not os.path.exists(kegg_dir):
             os.mkdir(kegg_dir)
@@ -49,7 +49,7 @@ class Library:
     def input_molfile(self, molfile, name=False):
         if not name:
             name = len(self.cpds)
-        self.digraph.add_node(len(self.cpds)) 
+        self.digraph.add_node(len(self.cpds))
         c = Compound()
         lines = ''
         with open(molfile) as f:
@@ -69,7 +69,7 @@ class Library:
     def input_rdkmol(self, mol, name=False):
         if not name:
             name = len(self.cpds)
-        self.digraph.add_node(len(self.cpds)) 
+        self.digraph.add_node(len(self.cpds))
         c = Compound()
         c.mol = mol
         c.input_molblock(Chem.MolToMolBlock(mol))

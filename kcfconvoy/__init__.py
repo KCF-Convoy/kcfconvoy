@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
+"""
 from IPython.utils.io import rprint
 from rdkit import Chem
 from rdkit.Chem import AllChem
@@ -13,7 +14,12 @@ import numpy as np
 import os
 import pandas as pd
 import urllib.request
- 
-__author__  = 'maskot1977'
+"""
+
+from . import Compound
+from . import converter
+from . import Library
+
+__author__ = 'maskot1977'
 __version__ = '0.0.1'
 __license__ = 'MIT'
