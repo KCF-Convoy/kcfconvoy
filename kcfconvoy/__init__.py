@@ -21,5 +21,5 @@ from . import converter
 from . import Library
 
 __author__ = 'maskot1977'
-__version__ = '0.0.1'
+__version__ = '0.0.2'
 __license__ = 'MIT'
