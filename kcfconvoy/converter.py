@@ -1,4 +1,4 @@
-# at KCF-Convoy
+# at kcfconvoy
 from rdkit import Chem
 import copy
 import networkx as nx
@@ -56,13 +56,21 @@ class KcfV:
         for _str, _type, lev, count in zip(self.strs, self.types, self.levels, self.counts):
             matrix.append([_str, _type, lev, count])
         return pd.DataFrame(sorted(matrix, key=lambda x:x[3], reverse=True), columns=['str', 'type', 'level', 'count'])
+    def string2seq(self):
+        list1 = []
+        for dict2 in self.subs_string:
+            dict1 = {}
+            for k, v in dict2.items():
+                if v not in dict1.keys():
+                    dict1[v] = []
+                dict1[v].append(k)
+            list1.append(dict1)
+        return list1
 
-def bundle(skeldic, klabels, level, cutoff=False):
+def bundle(headpin, klabels, level, cutoff=False):
     skeldic2 = {}
-    for data in skeldic.values():
+    for head, length_seq in headpin.items():
         seen = []
-        #print(level)
-        data2 = [[length, [klabels[i][level] for i in seq], seq] for (length, seq) in data]
         string = ''
         idx = 0
         previdx = 0
@@ -70,13 +78,14 @@ def bundle(skeldic, klabels, level, cutoff=False):
         mainchain = []
         bridges = []
         longerpatherror = False
-        for length, seqc, seq in sorted(data2):
-            #print(length, seqc, seq)
-            #print(seen)
+        length_kgseq = [[length, [klabels[i][level] for i in seq], seq] for (length, seq) in length_seq]
+        for length, seqc, seq in sorted(length_kgseq):
+            if seq[0] != seq[-1]:
+                skeldic2[",".join([str(x) for x in sorted(seq)])] = "-".join(seqc)
             idx += 1
             if cutoff:
                 if idx == 1:
-                    if length != 0 - cutoff:
+                    if length != (0 - cutoff):
                         break
             for i, atm in enumerate(seq):
                 if atm in seen:
@@ -92,14 +101,15 @@ def bundle(skeldic, klabels, level, cutoff=False):
                                     bridges.append(bridge)
                     prevnotseen = False
                 else:
-                    if cutoff:
-                        if idx != 1:
-                            if length == 0 - cutoff:
-                                if i < (1 - length - i):
-                                    #print(i, length, path)
-                                    #continue
-                                    longerpatherror = True
-                                    break
+                    #if cutoff:
+                    #    if idx != 1:
+                    #        if length == 0 - cutoff:
+                    #            if i < (1 - length - i):
+                    #                #print(i, length, path)
+                    #                #continue
+                    #                #########longerpatherror = True
+                    #                #########break
+                    #                pass
                     if i != 0 and idx != previdx:
                         string += "," + str(seen.index(seq[i - 1]) + 1)
                     if len(string) > 0:
@@ -110,20 +120,16 @@ def bundle(skeldic, klabels, level, cutoff=False):
                         mainchain.append(sorted([seen.index(seq[i - 1]) + 1, seen.index(atm) + 1]))
                     previdx = idx
                     prevnotseen = True
-            if longerpatherror:
-                break
+            #if longerpatherror:
+            #    break
         if len(seen) < 3:
             continue
         if len(bridges) > 0:
             string += "," + ",".join([str(b[0]) + "-" + str(b[1]) for b in sorted(bridges)])
         seen = ",".join([str(i) for i in sorted(seen)])
         if seen not in skeldic2.keys():
-        #    continue
-        #elif skeldic2[seen] == '':
-            #print(seen, string)
             skeldic2[seen] = string
         elif skeldic2[seen] > string:
-            #print(seen, string)
             skeldic2[seen] = string
     return skeldic2
 
@@ -154,6 +160,9 @@ def kcf_vec(c1, levels = [0, 1, 2], attributes = [0, 1, 2, 3, 4, 5], maxsublengt
     if kcfv.keggatom == {}:
         return kcfv
 
+    # skeleton or inorganic substructure entries
+    skeleton = []
+    inorganic = []
     c1c = copy.deepcopy(c1)
     for edge in c1c.graph.edges():
         ele1 = c1c.symbol(edge[0])
@@ -161,9 +170,6 @@ def kcf_vec(c1, levels = [0, 1, 2], attributes = [0, 1, 2, 3, 4, 5], maxsublengt
         if (ele1 == 'C' and ele2 != 'C') or (ele1 != 'C' and ele2 == 'C'):
             c1c.graph.remove_edge(edge[0], edge[1])
     subgraphs = nx.connected_component_subgraphs(c1c.graph)
-
-    skeleton = []
-    inorganic = []
     for subg in subgraphs:
         if len(subg.nodes()) < 4:
             continue
@@ -176,6 +182,20 @@ def kcf_vec(c1, levels = [0, 1, 2], attributes = [0, 1, 2, 3, 4, 5], maxsublengt
     pinpath2 = [[[cutoff, pinpath(subg, cutoff)] for subg in subgraphs]
                 for cutoff in range(4, maxsublength + 1)]
     pinpath3 = [[cutoff, pinpath(c1.graph, cutoff)] for cutoff in range(4, maxsublength + 1)]
+    
+    ########################
+    #print("pinpath1")
+    #print(pinpath1)
+    #print("pinpath2")
+    #print(pinpath2)
+    #print("pinpath3")
+    #for cutoff, pinpath3x in pinpath3:
+    #    print(cutoff)
+    #    for k in pinpath3x.items():
+    #        print(k)
+    #    print("\n")
+    ########################
+    
     keggatom_levels = ['atom_species', 'atom_class', 'kegg_atom']
     for lev in [keggatom_levels[level] for level in levels]:
         if 0 in attributes:
@@ -244,7 +264,9 @@ def kcf_vec(c1, levels = [0, 1, 2], attributes = [0, 1, 2, 3, 4, 5], maxsublengt
                         elif subs_string[len(kcfv.subs_string) - 1][k] > s:
                             subs_string[len(kcfv.subs_string) - 1][k] = s
             for cutoff, pinpath3x in pinpath3:
+                #print("cutoff=", cutoff, " pinpath3x=", pinpath3x) ###############
                 for k, s in bundle(pinpath3x, kcfv.keggatom, lev, cutoff).items():
+                    #print("bundle", k, s) ####################
                     #if k in ring_basis:
                     #    s = modify_simple_ring(k, s)
                     if k not in kcfv.subs_string[len(kcfv.subs_string) - 1].keys():
@@ -266,9 +288,8 @@ def kcf_vec(c1, levels = [0, 1, 2], attributes = [0, 1, 2, 3, 4, 5], maxsublengt
 
     return kcfv
 
-
 def pinpath(graph, cutoff=False):
-    skeldic = {}
+    headpin = {}
     for i in graph.nodes():
         for j in graph.nodes():
             sequences = []
@@ -281,14 +302,16 @@ def pinpath(graph, cutoff=False):
             else:
                 sequences = [seq for seq in nx.all_simple_paths(graph, i, j)]
             for seq in sequences:
-                key = ",".join([str(seq[0]), str(seq[1])])
-                if key not in skeldic.keys():
-                    skeldic[key] = []
+                if (seq[0] == seq[-1]) and (len(seq) == 3):
+                    continue
+                head = "-".join([str(seq[0]), str(seq[1])])
+                if head not in headpin.keys():
+                    headpin[head] = []
                 length = len(seq)
                 if i == j:
                     length -= 1
-                skeldic[key].append([0 - length, seq])
-    return skeldic
+                headpin[head].append([0 - length, seq])
+    return headpin
 
 def rdkmol_to_kcf(mol, id='NoName'):
     lines = ''

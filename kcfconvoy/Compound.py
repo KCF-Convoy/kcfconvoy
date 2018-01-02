@@ -1,5 +1,7 @@
 from rdkit import Chem
+from rdkit.Chem import AllChem
 from rdkit.Chem import Draw
+#from rdkit.Chem import rdDepictor
 import matplotlib.pyplot as plt
 import networkx as nx
 import os
@@ -18,9 +20,17 @@ class Compound: # KCF-Convoy
         self.graph = nx.Graph()
         self.mol = None
     
+    def compute_2d_coords(self):
+        AllChem.Compute2DCoords(self.mol)
+        #rdDepictor.Compute2DCoords(self.mol)
+        self.set_coordinates()
+        self.fit2d = True
+        return True
+    
     def draw_cpd(self, imagefile="mol.png", shownum=False):
         if not self.fit2d:
-            rdDepictor.Compute2DCoords(self.mol)
+            AllChem.Compute2DCoords(self.mol)
+            #rdDepictor.Compute2DCoords(self.mol)
             self.set_coordinates()
             self.fit2d = True
         if shownum:
@@ -33,7 +43,8 @@ class Compound: # KCF-Convoy
 
     def draw_cpd_with_custom_labels(self, custom_label):
         if not self.fit2d:
-            rdDepictor.Compute2DCoords(self.mol)
+            AllChem.Compute2DCoords(self.mol)
+            #rdDepictor.Compute2DCoords(self.mol)
             self.set_coordinates()
             self.fit2d = True
         pos = self.get_coordinates()
@@ -45,6 +56,24 @@ class Compound: # KCF-Convoy
         nx.draw(self.graph, pos, node_color=node_color, alpha=0.4)
         nx.draw_networkx_labels(self.graph,pos,fontsize=6, labels=node_label)
         #nx.draw_networkx_edge_labels(self.graph, pos, edge_labels=edge_labels, fontsize=3, font_color='b')
+        plt.draw()
+
+    def draw_cpd_with_labels(self, start=0):
+        if not self.fit2d:
+            AllChem.Compute2DCoords(self.mol)
+            #rdDepictor.Compute2DCoords(self.mol)
+            self.set_coordinates()
+            self.fit2d = True
+        pos = self.get_coordinates()
+        node_color = self.get_node_colors()
+        node_label = self.get_node_labels(start)
+        edge_labels = {}
+        for edge in self.graph.edges(data=True):
+            edge_labels[(edge[0], edge[1])] = edge[2]['index']
+        nx.draw(self.graph, pos, node_color=node_color, alpha=0.4)
+        nx.draw_networkx_labels(self.graph, pos, fontsize=6, labels=node_label)
+        nx.draw_networkx_edge_labels(
+            self.graph, pos, edge_labels=edge_labels, fontsize=3, font_color='b')
         plt.draw()
 
     def find_seq(self, length, bidirectonal=True):
@@ -72,6 +101,12 @@ class Compound: # KCF-Convoy
     def get_node_colors(self):
         return self.label_to_nums([node[1]['symbol'] for node in self.graph.nodes(data=True)])
 
+    def get_node_labels(self, start=0):
+        dic = {}
+        for node in self.graph.nodes(data=True):
+            dic[node[0]] = str(int(node[1]['row'][12]) + start - 1)
+        return dic
+
     def input_from_kegg(self, cid): # e.g., cid = C00002 
         kegg_dir = "kegg"
         if not os.path.exists(kegg_dir):
@@ -81,6 +116,17 @@ class Compound: # KCF-Convoy
             urllib.request.urlretrieve(url, "%s/%s.mol" % (kegg_dir, cid))
         self.input_molfile("%s/%s.mol" % (kegg_dir, cid))
         return True
+    
+    def input_from_knapsack(self, cid): # e.g., cid = C00002657
+        knapsack_dir = "knapsack"
+        if not os.path.exists(knapsack_dir):
+            os.mkdir(knapsack_dir)
+        if not os.path.exists("%s/%s.mol" % (knapsack_dir, cid)):
+            url = "http://knapsack3d.sakura.ne.jp/mol3d/%s.3d.mol" % (cid)
+            urllib.request.urlretrieve(url, "%s/%s.mol" % (knapsack_dir, cid))
+        self.input_molfile("%s/%s.mol" % (knapsack_dir, cid))
+        self.compute_2d_coords()
+        return True        
 
     def input_inchi(self, inchi):
         self.input_rdkmol(Chem.MolFromInchi(inchi))
@@ -149,6 +195,26 @@ class Compound: # KCF-Convoy
                 dic[label] = i
                 i += 1
         return [dic[label] for label in lst]
+
+    def set_coordinates(self):
+        molblock = Chem.MolToMolBlock(self.mol)
+        n_atoms = 0
+        n_bonds = 0
+        for i, line in enumerate(molblock.split("\n")):
+            if i < 4:
+                if i == 3:
+                    n_atoms, n_bonds = [int(n) for n in line.split()[:2]]
+            elif i < (4 + n_atoms):
+                a = line.split()
+                if i - 4 in self.graph.node.keys():
+                    self.graph.node[i - 4]['row'][0] = a[0]
+                    self.graph.node[i - 4]['row'][1] = a[1]
+                    self.graph.node[i - 4]['row'][2] = a[2]
+            elif i < (4 + n_atoms + n_bonds):
+                pass
+            else:
+                pass
+        return True
 
     def symbol(self, atmidx):
         return self.graph.node[atmidx]['symbol']
