@@ -1,3 +1,6 @@
+#!/bin/env python
+# coding: utf-8
+
 import os
 import urllib.request
 from copy import copy
@@ -75,7 +78,7 @@ class Compound:
         - get_triplets
             3連続の結合を全て取り出す。
 
-    組み込み method:
+    内部 method:
         - _input_molblock
             input系のmethodから呼ばれ，実際にself.graphなどを生成する。
         - _compute_2d_coords
@@ -182,12 +185,12 @@ class Compound:
 
         return True
 
-    def input_rdkmol(self, mol):
+    def input_rdkmol(self, rdkmol):
         """
         rdkitのmol形式を受け取り，mol形式をmolblockに直し登録する。
         """
-        self.mol = mol
-        self._input_molblock(Chem.MolToMolBlock(mol))
+        self.mol = rdkmol
+        self._input_molblock(Chem.MolToMolBlock(rdkmol))
 
         if self.fit2d is False:
             self._compute_2d_coords()

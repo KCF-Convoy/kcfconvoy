@@ -1,4 +1,6 @@
-# KCF-Convoy
+#!/bin/env python
+# coding: utf-8
+
 import networkx as nx
 from kcfconvoy.Compound import Compound
 from rdkit import Chem
@@ -48,7 +50,7 @@ class Library:
                 rdk_mol
                 name
 
-    組み込み method
+    内部 method
         - _append_cpd
             input系の内部メソッド，Libraryにcpdを加える。
     """
