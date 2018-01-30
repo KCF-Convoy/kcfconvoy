@@ -1,55 +1,59 @@
-# at kcfconvoy
+#!/bin/env python
+# coding: utf-8
+
 import numpy as np
 
 
-def similarity(v1, v2, n_nodes=range(99), levels=[0, 1, 2]):
-    keggatom_levels = ['atom_species', 'atom_class', 'kegg_atom']
-    a1 = []
-    a2 = []
-    for i, s in enumerate(v1.strs):
-        if not v1.n_nodes[i] in n_nodes:
+def similarity(kcf_vec_1, kcf_vec_2, n_nodes=list(range(99)),
+               levels=[0, 1, 2]):
+    kegg_atom_levels = ["atom_species", "atom_class", "kegg_atom"]
+    kegg_atom_levels = set([kegg_atom_levels[level] for level in levels])
+    l_count_1 = []
+    l_count_2 = []
+    for ele, label in kcf_vec_1.kegg_atom_label.items():
+        if not label["n_nodes"] in n_nodes:
             continue
-        if not v1.levels[i] in [keggatom_levels[lev] for lev in levels]:
+        if not label["ele_level"] in kegg_atom_levels:
             continue
-        if s in v2.strs:
-            j = v2.strs.index(s)
-            a1.append(v1.counts[i])
-            a2.append(v2.counts[j])
+        if ele in kcf_vec_2.kegg_atom_label.keys():
+            l_count_1.append(kcf_vec_1.kegg_atom_label[ele]["count"])
+            l_count_2.append(kcf_vec_2.kegg_atom_label[ele]["count"])
         else:
-            a1.append(v1.counts[i])
-            a2.append(0)
-    for j, s in enumerate(v2.strs):
-        if not v2.n_nodes[j] in n_nodes:
+            l_count_1.append(kcf_vec_1.kegg_atom_label[ele]["count"])
+            l_count_2.append(0)
+    for ele, label in kcf_vec_2.kegg_atom_label.items():
+        if not label["n_nodes"] in n_nodes:
             continue
-        if not v1.levels[i] in [keggatom_levels[lev] for lev in levels]:
+        if not label["ele_level"] in kegg_atom_levels:
             continue
-        if s in v1.strs:
-            pass
-        else:
-            a1.append(0)
-            a2.append(v2.counts[j])
+        if ele not in kcf_vec_1.kegg_atom_label.keys():
+            l_count_1.append(0)
+            l_count_2.append(kcf_vec_2.kegg_atom_label[ele]["count"])
 
-    f1 = np.array(a1)
-    f2 = np.array(a2)
+    np_count_1 = np.array(l_count_1)
+    np_count_2 = np.array(l_count_2)
 
     # 谷本係数の計算に必要な成分
-    only1 = sum([i if i > 0 else 0 for i in (f1 - f2)])
-    only2 = sum([i if i > 0 else 0 for i in (f2 - f1)])
-    both12 = sum([i if i < j else j for i, j in zip(f1, f2)])
+    only_1 = np.sum(np.fmax(0, (np_count_1 - np_count_2)))
+    only_2 = np.sum(np.fmax(0, (np_count_2 - np_count_1)))
+    both_12 = np.sum((np.minimum(np_count_1, np_count_2)))
 
     # 重みつき谷本係数
-    x = both12 / (only1 + only2 + both12)
-    if (only1 + only2 + both12) == 0:
+    if only_1 + only_2 + both_12 == 0:
         x = 0
+    else:
+        x = both_12 / (only_1 + only_2 + both_12)
 
     # 分子１が分子２中でどのくらい保存されているかを表す係数
-    x12 = both12 / (only1 + both12)
-    if (only1 + both12) == 0:
-        x12 = 0
+    if only_1 + both_12 == 0:
+        x_12 = 0
+    else:
+        x_12 = both_12 / (only_1 + both_12)
 
     # 分子２が分子１中でどのくらい保存されているかを表す係数
-    x21 = both12 / (only2 + both12)
-    if (only2 + both12) == 0:
-        x21 = 0
+    if only_2 + both_12 == 0:
+        x_21 = 0
+    else:
+        x_21 = both_12 / (only_2 + both_12)
 
-    return (x, x12, x21)
+    return (x, x_12, x_21)

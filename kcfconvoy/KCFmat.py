@@ -1,42 +1,77 @@
 #!/bin/env python
 # coding: utf-8
 
-from collections import defaultdict
-from copy import deepcopy
-
-import pandas as pd
-
-import networkx as nx
-from rdkit import Chem
 import numpy as np
 
-from . import Library
+from .KCFvec import KCFvec
+from .Library import Library
 
 
 class KCFmat(Library):
     def __init__(self):
-        self.names = []
-        self.kcfvecs = []
+        super().__init__()
+        self.kcf_vecs = []
         self.all_strs = []
         self.all_mat = np.array([])
         self.mask_array = np.array([])
         self.mat = np.array([])
 
-    def input_library(self, library):
-        self.names = library.names
-        self.kcfvecs = [kcf_vec(cpd) for cpd in library.cpds]
-        self.all_strs = list(
-            set([item for kcfvec in self.kcfvecs for item in kcfvec.strs]))
-        self.all_mat = np.zeros((len(self.kcfvecs), len(self.all_strs)))
-        for i, kcfvec in enumerate(self.kcfvecs):
-            for j, _str in enumerate(kcfvec.strs):
-                self.all_mat[i][self.all_strs.index(_str)] = kcfvec.counts[j]
-        self.calc_kcf_mat()
+    def input_from_kegg(self, cid, name=None):
+        super().input_from_kegg(cid, name)
+        self._append_kcf_vec()
 
-    def calc_kcf_mat(self, ratio=400):
-        kcf_matT = self.all_mat.T
+        return True
+
+    def input_from_knapsack(self, cid, name=None):
+        super().input_from_knapsack(cid, name)
+        self._append_kcf_vec()
+
+        return True
+
+    def input_molfile(self, molfile, name=None):
+        super().input_molfile(molfile, name)
+        self._append_kcf_vec()
+
+        return True
+
+    def input_inchi(self, inchi, name=None):
+        super().input_inchi(inchi, name)
+        self._append_kcf_vec()
+
+        return True
+
+    def input_smiles(self, smiles, name=None):
+        super().input_from_smiles(smiles, name)
+        self._append_kcf_vec()
+
+        return True
+
+    def input_rdkmol(self, mol, name=None):
+        super().input_rdkmol(mol, name)
+        self._append_kcf_vec()
+
+        return True
+
+    def _append_kcf_vec(self):
+        kcf_vec = KCFvec()
+        kcf_vec.input_rdkmol(self.cpds[-1], self.names[-1])
+        kcf_vec.convert_kcf_vec
+        self.kcf_vecs.append(kcf_vec)
+        self.all_strs = \
+            list(set(self.all_strs) | kcf_vec.kegg_atom_label.keys())
+
+        return True
+
+    def calc_kcf_matrix(self, ratio=400):
+        self.all_mat = np.zeros((len(self.kcf_vecs), len(self.all_strs)))
+        for i, kcf_vec in enumerate(self.kcf_vecs):
+            for ele, label in kcf_vec.items():
+                self.all_mat[i][self.all_strs.index(ele)] = label["count"]
+        kcf_mat_T = self.all_mat.T
         min_cpd = max(len(self.all_mat) / ratio, 1)
         self.mask_array = np.array(
-            [len(np.where(a != 0)[0]) > min_cpd for a in kcf_matT])
-        kcf_matT2 = kcf_matT[self.mask_array]
-        self.mat = kcf_matT2.T
+            [len(np.where(a != 0)[0]) > min_cpd for a in kcf_mat_T])
+        kcf_mat_T_2 = kcf_mat_T[self.mask_array]
+        self.mat = kcf_mat_T_2.T
+
+        return True

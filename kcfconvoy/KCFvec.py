@@ -8,7 +8,7 @@ import pandas as pd
 import networkx as nx
 from rdkit import Chem
 
-from . import Compound
+from .Compound import Compound
 
 
 class KCFvec(Compound):
@@ -59,6 +59,10 @@ class KCFvec(Compound):
 
         self.kcf : str 型で kcf 形式をもつ。
         self.kegg_atom_label : dict 型。rdkit の mol 形式から生成。kcf を作成する際に必要。
+        self.kcf_vec : defaultdict
+            key : str
+            value : dict
+                key : n_nodes, ele_type, ele_level, count
         """
         super().__init__()
         self.kcf = ""
