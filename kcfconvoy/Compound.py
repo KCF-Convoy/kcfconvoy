@@ -231,7 +231,7 @@ class Compound:
                 self.fit2d = True
             if line[3] == "H":
                 continue
-            index_check_list.add(i - 4)
+            index_check_list.append(i - 4)
             self.graph.add_node(
                 len(self.graph.nodes()), symbol=line[3], row=line)
 
@@ -248,8 +248,8 @@ class Compound:
             if line[1] - 1 not in index_check_list:
                 continue
             replaced_list = copy(line)
-            replaced_list[0] = index_check_list.index(line[0])
-            replaced_list[1] = index_check_list.index(line[1])
+            replaced_list[0] = index_check_list.index(line[0] - 1) + 1
+            replaced_list[1] = index_check_list.index(line[1] - 1) + 1
             self.graph.add_edge(index_check_list.index(line[0] - 1),
                                 index_check_list.index(line[1] - 1),
                                 order=line[2], index=bondidx,
@@ -300,8 +300,8 @@ class Compound:
         その行のうち，0, 1番目に二次元座標が登録されている。
         それらの二次元座標をネストしたlistとして返す。
         """
-        l_nodes = list(self.graph.nodes.data("row"))
-        l_coordinates = [list(map(float, node[1][0:2])) for node in l_nodes]
+        l_rows = [node[1]["row"] for node in self.graph.nodes(data=True)]
+        l_coordinates = [list(map(float, row[0:2])) for row in l_rows]
 
         return l_coordinates
 
@@ -348,7 +348,8 @@ class Compound:
         それぞれのnodesのsymbolのlistから，
         listをsortして，重複無しで最初から0-indexのintを振り，そのintとsymbol_listとの対応を返す。
         """
-        symbol_list = [node[1] for node in self.graph.nodes.data("symbol")]
+        symbol_list = \
+            [node[1]["symbol"] for node in self.graph.nodes(data=True)]
 
         count = 0
         d_index = dict()
@@ -370,9 +371,9 @@ class Compound:
         基本的に，0-indexか1-indexかを調整するためのもの
         """
         d_label = {}
-        l_nodes = self.graph.nodes.data("row")
+        l_nodes = self.graph.nodes(data=True)
         for node in l_nodes:
-            d_label[node[0]] = str(int(node[1][12]) + start - 1)
+            d_label[node[0]] = str(int(node[1]["row"][12]) + start - 1)
 
         return d_label
 
