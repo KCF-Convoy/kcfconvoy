@@ -77,6 +77,8 @@ class Compound:
                 atom_index
         - get_triplets
             3連続の結合を全て取り出す。
+        - get_vicinities
+            隣接している atom のindexを返す。
 
     内部 method:
         - _input_molblock
