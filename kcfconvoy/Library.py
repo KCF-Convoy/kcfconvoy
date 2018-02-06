@@ -113,8 +113,8 @@ class Library:
 
         self.inchis.append(inchis)
         self.cpds.append(cpd)
-        self.generation.append(0)
-        self.name.append(name)
+        self.generations.append(0)
+        self.names.append(name)
 
         return True
 
