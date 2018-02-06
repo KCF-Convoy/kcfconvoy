@@ -1,5 +1,34 @@
 import unittest
 from kcfconvoy.Compound import Compound
+import os
+from rdkit import Chem
+
+MOLBLOCK = (
+    " \n"
+    " \n"
+    " \n"
+    "  9  9  0  0  0  0  0  0  0  0999 V2000\n"
+    "   28.0314  -18.4596    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n"
+    "   26.8219  -19.1573    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n"
+    "   29.2539  -19.1573    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n"
+    "   28.0250  -17.0706    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n"
+    "   26.8219  -20.5653    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n"
+    "   29.2539  -20.5653    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n"
+    "   29.2283  -16.3732    0.0000 O   0  0  0  0  0  0  0  0  0  0  0  0\n"
+    "   28.0314  -21.2759    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n"
+    "   28.0250  -22.6711    0.0000 O   0  0  0  0  0  0  0  0  0  0  0  0\n"
+    "  1  2  1  0     0  0\n"
+    "  1  3  2  0     0  0\n"
+    "  1  4  1  0     0  0\n"
+    "  2  5  2  0     0  0\n"
+    "  3  6  1  0     0  0\n"
+    "  4  7  2  0     0  0\n"
+    "  5  8  1  0     0  0\n"
+    "  8  9  1  0     0  0\n"
+    "  6  8  2  0     0  0\n"
+    "M  END\n"
+)
+PATH = "./test.mol"
 
 
 class TestCompound(unittest.TestCase):
@@ -7,11 +36,15 @@ class TestCompound(unittest.TestCase):
     kcfconvoyのCompoundのテスト
     """
 
+    @classmethod
+    def setUpClass(cls):
+        with open(PATH, "w")as f:
+            f.write(MOLBLOCK)
+
     def test_input_from_kegg(self):
         """
         input_from_keggのテスト
         内部でinput_molfileを使用
-        作成したmolファイルとkeggフォルダを消すか検討中
         """
         cid = "C00002"
         expected = [(0, 1), (0, 2), (0, 3), (1, 4), (1, 5), (2, 6), (2, 7),
@@ -24,12 +57,13 @@ class TestCompound(unittest.TestCase):
         c.input_from_kegg(cid)
         actual = c.graph.edges()
         self.assertEqual(actual, expected)
+        os.remove("./kegg/C00002.mol")
+        os.rmdir("./kegg")
 
     def test_input_from_knapsack(self):
         """
         input_from_knapsackのテスト
         内部でinput_molfileを使用
-        作成したmolファイルとknapsackフォルダを消すか検討中
         """
         cid = "C00037855"
         expected = [(0, 1), (0, 5), (0, 6), (1, 2), (2, 3), (3, 4), (4, 5),
@@ -38,16 +72,17 @@ class TestCompound(unittest.TestCase):
         c.input_from_knapsack(cid)
         actual = c.graph.edges()
         self.assertEqual(actual, expected)
+        os.remove("./knapsack/C00037855.mol")
+        os.rmdir("./knapsack")
 
     def test_input_molfile(self):
         """
         input_molfileのテスト
         """
-        path = "test.mol"
         expected = [(0, 1), (0, 2), (0, 3), (1, 4), (2, 5), (3, 6), (4, 7),
                     (5, 7), (7, 8)]
         c = Compound()
-        c.input_molfile(path)
+        c.input_molfile(PATH)
         actual = c.graph.edges()
         self.assertEqual(actual, expected)
 
@@ -82,9 +117,7 @@ class TestCompound(unittest.TestCase):
         """
         input_rdkmolのテスト
         """
-        from rdkit import Chem
-        path = "test.mol"
-        rdkmol = Chem.MolFromMolFile(path)
+        rdkmol = Chem.MolFromMolBlock(MOLBLOCK)
         expected = [(0, 1), (0, 2), (0, 3), (1, 4), (2, 5), (3, 6), (4, 7),
                     (5, 7), (7, 8)]
         c = Compound()
@@ -96,10 +129,8 @@ class TestCompound(unittest.TestCase):
         """
         draw_cpdのテスト
         """
-        import os
-        path = "test.mol"
         c = Compound()
-        c.input_molfile(path)
+        c.input_molfile(PATH)
         c.draw_cpd("test.png")
         self.assertTrue(os.path.exists("./test.png"))
         os.remove("./test.png")
@@ -109,16 +140,14 @@ class TestCompound(unittest.TestCase):
         draw_cpd_with_labelsのテスト
         これは実行時にエラーが出るかのチェックしかしてない
         """
-        path = "test.mol"
         c = Compound()
-        c.input_molfile(path)
+        c.input_molfile(PATH)
         c.draw_cpd_with_labels()
 
     def test_find_seq(self):
         """
         find_seqのテスト
         """
-        path = "test.mol"
         expected = [[0, 1, 0], [0, 2, 0], [0, 3, 0], [0, 1, 4], [0, 2, 5],
                     [0, 3, 6], [0, 1, 4, 7], [0, 2, 5, 7], [1, 0, 1],
                     [1, 4, 1], [1, 0, 2], [1, 0, 3], [1, 0, 2, 5],
@@ -135,7 +164,7 @@ class TestCompound(unittest.TestCase):
                     [7, 5, 7], [8, 7, 4, 1], [8, 7, 5, 2], [8, 7, 4],
                     [8, 7, 5], [8, 7, 8]]
         c = Compound()
-        c.input_molfile(path)
+        c.input_molfile(PATH)
         actual = [i for i in c.find_seq(4)]
         self.assertEqual(actual, expected)
 
@@ -144,11 +173,10 @@ class TestCompound(unittest.TestCase):
         has_bondのテスト
         assertをループにかけるので時間がかかるようなら要修正
         """
-        path = "test.mol"
         expected = [(0, 1), (0, 2), (0, 3), (1, 4), (2, 5), (3, 6), (4, 7),
                     (5, 7), (7, 8)]
         c = Compound()
-        c.input_molfile(path)
+        c.input_molfile(PATH)
         for atom_1, atom_2 in expected:
             self.assertTrue(c.has_bond(atom_1, atom_2))
 
@@ -156,10 +184,9 @@ class TestCompound(unittest.TestCase):
         """
         get_symbolのテスト
         """
-        path = "test.mol"
         expected = ["C", "C", "C", "C", "C", "C", "O", "C", "O"]
         c = Compound()
-        c.input_molfile(path)
+        c.input_molfile(PATH)
         actual = [c.get_symbol(i) for i in range(c.n_atoms)]
         self.assertEqual(actual, expected)
 
@@ -168,14 +195,30 @@ class TestCompound(unittest.TestCase):
         get_tripletsのテスト
         内部でfind_seqを使用
         """
-        path = "test.mol"
         expected = [[0, 1, 4], [0, 2, 5], [0, 3, 6], [1, 0, 2], [1, 0, 3],
                     [1, 4, 7], [2, 0, 3], [2, 5, 7], [4, 7, 5], [4, 7, 8],
                     [5, 7, 8]]
         c = Compound()
-        c.input_molfile(path)
+        c.input_molfile(PATH)
         actual = [i for i in c.get_triplets()]
         self.assertEqual(actual, expected)
+
+    def test_get_vicinities(self):
+        """
+        get_vicinitiesのテスト
+        """
+        rdkmol = Chem.MolFromMolBlock(MOLBLOCK)
+        expected = [(0, [1, 2, 3]), (1, [0, 4]), (2, [0, 5]), (3, [0, 6]),
+                    (4, [1, 7]), (5, [2, 7]), (6, [3]), (7, [8, 4, 5]),
+                    (8, [7])]
+        c = Compound()
+        c.input_rdkmol(rdkmol)
+        actual = c.get_vicinities()
+        self.assertEqual(actual, expected)
+
+    @classmethod
+    def tearDownClass(cls):
+        os.remove(PATH)
 
 
 if __name__ == "__main__":
