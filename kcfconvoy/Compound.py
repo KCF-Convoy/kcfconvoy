@@ -148,6 +148,8 @@ class Compound:
             url = "http://knapsack3d.sakura.ne.jp/mol3d/{}.3d.mol".format(cid)
             urllib.request.urlretrieve(url,
                                        "./{}/{}.mol".format(knapsack_dir, cid))
+        mol = Chem.MolFromMolFile("./{}/{}.mol".format(knapsack_dir, cid))
+        Chem.MolToMolFile(mol, "./{}/{}.mol".format(knapsack_dir, cid))
 
         self.input_molfile("./{}/{}.mol".format(knapsack_dir, cid))
 

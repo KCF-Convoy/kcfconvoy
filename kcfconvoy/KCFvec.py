@@ -164,7 +164,7 @@ class KCFvec(Compound):
                 molblock[0], molblock[1])
 
         self.kcf += "BOND        {:<5}\n".format(self.mol.GetNumBonds())
-        for index, molblock in enumerate(self.molblock_bonds.items()):
+        for index, molblock in enumerate(self.molblock_bonds):
             self.kcf += " " * 12
             self.kcf += "{:<3}{:>4}{:>4}{:>2}\n".format(index + 1, molblock[0],
                                                         molblock[1],
@@ -180,6 +180,8 @@ class KCFvec(Compound):
         edge の部分を list 型の self.molblock_bonds
         に登録する。
         """
+        self.molblock_atoms = dict()
+        self.molblock_bonds = []
         molblock = Chem.MolToMolBlock(self.mol)
         l_molblock = molblock.split("\n")
         # atom についての行
@@ -209,19 +211,19 @@ class KCFvec(Compound):
 
         for atom in self.mol.GetAtoms():
             if atom.GetSymbol() == "C":
-                label = self._get_atom_label_C(atom)
+                label = self._get_label_C(atom)
             elif atom.GetSymbol() == "N":
-                label = self._get_atom_label_N(atom)
+                label = self._get_label_N(atom)
             elif atom.GetSymbol() == "O":
-                label = self._get_atom_label_O(atom)
+                label = self._get_label_O(atom)
             elif atom.GetSymbol() == "S":
-                label = self._get_atom_label_S(atom)
+                label = self._get_label_S(atom)
             elif atom.GetSymbol() == "P":
-                label = self._get_atom_label_P(atom)
+                label = self._get_label_P(atom)
             else:
-                label = self._get_atom_label_else(atom)
+                label = self._get_label_else(atom)
 
-            self.kegg_atom_label[atom.GetIdx] = label
+            self.kegg_atom_label[atom.GetIdx()] = label
 
         return True
 
@@ -632,7 +634,7 @@ class KCFvec(Compound):
 
         return kegg_atom_label
 
-    def _check_in_ring(atom):
+    def _check_in_ring(self, atom):
         """
         RDKit の atom object を受け取り，その atom が ring に含まれているかを判別する。
         atom.IsInRing という method も存在するが，kcf の仕様上，21 員環以上のものは
@@ -644,7 +646,7 @@ class KCFvec(Compound):
 
         return False
 
-    def _create_kegg_atom_label(kegg_atom, atom=None):
+    def _create_kegg_atom_label(self, kegg_atom, atom=None):
         """
         kegg_atom を受け取って，kcf に変換しやすい dict として返す。
         kegg_atom 自体は文字列。
@@ -658,7 +660,7 @@ class KCFvec(Compound):
                 label["atom_species"] = atom.GetSymbol()
             else:
                 label["atom_species"] = "R#"
-        label["atom_class"] = kegg_atom
+        label["atom_class"] = kegg_atom[0:2]
         label["kegg_atom"] = kegg_atom
 
         return label
@@ -675,17 +677,17 @@ class KCFvec(Compound):
         s_skeleton = set()
         s_inorganic = set()
         c_graph = deepcopy(self.graph)
-        for edge in c_graph.graph.edges():
-            ele1 = c_graph.symbol(edge[0])
-            ele2 = c_graph.symbol(edge[1])
+        for edge in c_graph.edges():
+            ele1 = self.get_symbol(edge[0])
+            ele2 = self.get_symbol(edge[1])
             if (ele1 == "C" and ele2 != "C") or (ele1 != "C" and ele2 == "C"):
-                c_graph.remove_edge(edge)
+                c_graph.remove_edge(edge[0], edge[1])
         subgraphs = nx.connected_component_subgraphs(c_graph)
         for subgraph in subgraphs:
             if len(subgraph.nodes()) < 4:
                 continue
             s_subgraph = ",".join(list(map(str, sorted(subgraph.nodes()))))
-            if c_graph.symbol(subgraph.nodes()[0]) == "C":
+            if self.get_symbol(subgraph.nodes()[0]) == "C":
                 s_skeleton.add(s_subgraph)
             else:
                 s_inorganic.add(s_subgraph)
@@ -709,38 +711,40 @@ class KCFvec(Compound):
         for level in levels:
             kegg_atom_key = kegg_atom_keys[level]
             if 0 in attributes:
-                for atom in self.kegg_atom.labels.values():
+                for atom in self.kegg_atom_label.values():
                     self._add_vec_element(atom[kegg_atom_key], 1, "atom",
-                                                                  level)
+                                          kegg_atom_key)
             if 1 in attributes:
                 for bond in self.graph.edges():
-                    l_atoms = [self.kegg_atom_label[i][level] for i in bond]
+                    l_atoms = [self.kegg_atom_label[i][kegg_atom_key]
+                               for i in bond]
                     ele = "-".join(sorted(l_atoms))
-                    self._add_vec_element(ele, 2, "bond", level)
+                    self._add_vec_element(ele, 2, "bond", kegg_atom_key)
 
             if 2 in attributes:
                 for triplet in self.get_triplets():
-                    l_ele = [self.kegg_atom_label[i][level] for i in triplet]
+                    l_ele = [self.kegg_atom_label[i][kegg_atom_key]
+                             for i in triplet]
                     ele_1 = "-".join(l_ele)
                     ele_2 = "-".join(reversed(l_ele))
                     ele = sorted([ele_1, ele_2])[0]
-                    self._add_vec_element(ele, 3, "triplet", level)
+                    self._add_vec_element(ele, 3, "triplet", kegg_atom_key)
 
             if 3 in attributes:
                 for vicinity in self.get_vicinities():
                     if len(vicinity[1]) < 3:
                         continue
-                    vic_tmp = \
-                        [self.kegg_atom_label[i][level] for i in vicinity[1]]
+                    vic_tmp = [self.kegg_atom_label[i][kegg_atom_key]
+                               for i in vicinity[1]]
                     vic_tmp = sorted(vic_tmp)
                     l_ele = [vic_tmp[0][0],
-                             self.kegg_atom_label[vicinity[0]][level],
+                             self.kegg_atom_label[vicinity[0]][kegg_atom_key],
                              vic_tmp[1][0]]
                     ele = "-".join(l_ele)
                     for i in range(2, len(vic_tmp)):
                         ele += ",2-" + vic_tmp[i][0]
                     self._add_vec_element(ele, 1 + len(vicinity[1]),
-                                          "vicinity", level)
+                                          "vicinity", kegg_atom_key)
 
             self.ring_string.append(dict())
             if 4 in attributes:
@@ -750,8 +754,8 @@ class KCFvec(Compound):
                     if ring[0] != ring[-1]:
                         continue
                     ring_str = ",".join(list(map(str, sorted(ring[0:-1]))))
-                    l_ele = \
-                        [self.kegg_atom_label[i][level] for i in ring[0:-1]]
+                    l_ele = [self.kegg_atom_label[i][kegg_atom_key]
+                             for i in ring[0:-1]]
                     ele = "-".join(l_ele)
                     for i in range(len(ring) - 2):
                         for j in range(i + 2, len(ring) - 1):
@@ -763,13 +767,14 @@ class KCFvec(Compound):
                         self.ring_string[-1][ring_str] = ele
                 for ring_str, ele in self.ring_string[-1].items():
                     self._add_vec_element(ele, len(ring_str.split(",")),
-                                          "ring", level)
+                                          "ring", kegg_atom_key)
 
             self.subs_string.append(dict())
             if 5 in attributes:
                 for pin_path_1_x in pin_path_1:
-                    for ring_str, ele in self._bund_pin_path(pin_path_1_x,
-                                                             level).items():
+                    for ring_str, ele in \
+                            self._bund_pin_path(pin_path_1_x,
+                                                kegg_atom_key).items():
                         if ring_str not in self.subs_string[-1].keys():
                             self.subs_string[-1][ring_str] = ele
                         elif self.subs_string[-1][ring_str] > ele:
@@ -777,16 +782,18 @@ class KCFvec(Compound):
                 for pin_path_2_x in pin_path_2:
                     for cut_off, pin_path_2_y in pin_path_2_x:
                         for ring_str, ele in \
-                                self._bund_pin_path(pin_path_2_y, level,
-                                                    cut_off).items():
+                                self._bund_pin_path(pin_path_2_y,
+                                                    kegg_atom_key,
+                                                    cutoff).items():
                             if ring_str not in self.subs_string[-1].keys():
                                 self.subs_string[-1][ring_str] = ele
                             elif self.subs_string[-1][ring_str] > ele:
                                 self.subs_string[-1][ring_str] = ele
                 for cut_off, pin_path_3_x in pin_path_3:
-                    for ring_str, ele in self._bund_pin_path(pin_path_3_x,
-                                                             level,
-                                                             cut_off).items():
+                    for ring_str, ele in \
+                            self._bund_pin_path(pin_path_3_x,
+                                                kegg_atom_key,
+                                                cut_off).items():
                         if ring_str not in self.subs_string[-1].keys():
                             self.subs_string[-1][ring_str] = ele
                         elif self.subs_string[-1][ring_str] > ele:
@@ -796,17 +803,17 @@ class KCFvec(Compound):
                     if k in self.ring_string[-1].keys():
                         continue
                     elif k in s_skeleton:
-                        self._add_vec_element(s, len(k.split(",")), "skeleton",
-                                                                    level)
+                        self._add_vec_element(s, len(k.split(",")),
+                                              "skeleton", kegg_atom_key)
                     elif k in s_inorganic:
                         self._add_vec_element(s, len(k.split(",")),
-                                              "inorganic", level)
+                                              "inorganic", kegg_atom_key)
                     elif len(s.split(",")) == 1:
-                        self._add_vec_element(s, len(k.split(",")), "linear",
-                                                                    level)
+                        self._add_vec_element(s, len(k.split(",")),
+                                              "linear", kegg_atom_key)
                     else:
-                        self._add_vec_element(s, len(k.split(",")), "unit",
-                                                                    level)
+                        self._add_vec_element(s, len(k.split(",")),
+                                              "unit", kegg_atom_key)
 
         return True
 
@@ -820,7 +827,7 @@ class KCFvec(Compound):
                 l_sequences = []
                 if cut_off:
                     for sequence in nx.all_simple_paths(graph, node_1, node_2,
-                                                        cut_off=cut_off):
+                                                        cutoff=cut_off):
                         if len(sequence) > cut_off:
                             if sequence[0] != sequence[-1]:
                                 continue
@@ -847,13 +854,13 @@ class KCFvec(Compound):
             self.kcf_vec[ele]["n_nodes"] = n_nodes
             self.kcf_vec[ele]["ele_type"] = ele_type
             self.kcf_vec[ele]["ele_level"] = ele_level
-            self.kcf_vec[ele]["count"] = 0
+            self.kcf_vec[ele]["count"] = 1
         else:
             self.kcf_vec[ele]["count"] += 1
 
         return True
 
-    def _bund_pin_path(self, head_pin, k_labels, level):
+    def _bund_pin_path(self, head_pin, level, cutoff=None):
         """
         TODO
         """
@@ -884,14 +891,14 @@ class KCFvec(Compound):
                                 string += "-" + str(l_seen.index(atom) + 1)
                                 chain = sorted([l_seen.index(seq[i - 1]) + 1,
                                                 l_seen.index(atom) + 1])
-                                main_chain.add(chain)
+                                main_chain.add(tuple(chain))
                                 break
                             else:
                                 bridge = sorted([l_seen.index(seq[i - 1]) + 1,
                                                  l_seen.index(atom) + 1])
-                                if bridge not in main_chain:
-                                    if bridge not in bridges:
-                                        bridges.add(bridge)
+                                if tuple(bridge) not in main_chain:
+                                    if tuple(bridge) not in bridges:
+                                        bridges.add(tuple(bridge))
                         prev_not_seen = False
                     else:
                         if i != 0 and idx != prev_idx:
@@ -903,7 +910,7 @@ class KCFvec(Compound):
                         if i != 0:
                             chain = sorted([l_seen.index(seq[i - 1]) + 1,
                                             l_seen.index(atom) + 1])
-                            main_chain.add(chain)
+                            main_chain.add(tuple(chain))
                         prev_idx = idx
                         prev_not_seen = True
             if len(l_seen) < 3:
@@ -922,24 +929,24 @@ class KCFvec(Compound):
 
         return d_skeleton
 
-        def get_pandas_df(self):
-            matrix = []
-            for key, value in self.kcf_vec.items():
-                ele = [key, value["ele_type"], value["ele_level"],
-                       value["count"]]
-                matrix.append(ele)
-            columns = ["str", "type", "level", "count"]
-            df = pd.DataFrame(sorted(matrix, key=lambda x: x[3], reverse=True),
-                              columns=columns)
-            return df
+    def get_pandas_df(self):
+        matrix = []
+        for key, value in self.kcf_vec.items():
+            ele = [key, value["ele_type"], value["ele_level"],
+                   value["count"]]
+            matrix.append(ele)
+        columns = ["str", "type", "level", "count"]
+        df = pd.DataFrame(sorted(matrix, key=lambda x: x[3], reverse=True),
+                          columns=columns)
+        return df
 
-        def string2seq(self):
-            ret_list = []
-            for dict2 in self.subs_string:
-                dict1 = dict()
-                for k, v in dict2.items():
-                    if v not in dict1.keys():
-                        dict1[v] = []
-                    dict1[v].append(k)
-                ret_list.append(dict1)
-            return ret_list
+    def string2seq(self):
+        ret_list = []
+        for dict2 in self.subs_string:
+            dict1 = dict()
+            for k, v in dict2.items():
+                if v not in dict1.keys():
+                    dict1[v] = []
+                dict1[v].append(k)
+            ret_list.append(dict1)
+        return ret_list
