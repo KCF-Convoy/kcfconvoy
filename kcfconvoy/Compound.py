@@ -140,6 +140,7 @@ class Compound:
         e.g., cid = C00002657
         knapsack_IDからmol形式でdownloadし，./knapsack/cid.molとして保存する。
         self.input_molfileを呼ぶ。
+        knapsack3dのmolファイルは3d座標が入っているため座標は再計算させる。
         """
         knapsack_dir = "knapsack"
         if not os.path.isdir("./" + knapsack_dir):
@@ -152,6 +153,7 @@ class Compound:
         Chem.MolToMolFile(mol, "./{}/{}.mol".format(knapsack_dir, cid))
 
         self.input_molfile("./{}/{}.mol".format(knapsack_dir, cid))
+        self.fit2d = False
 
         return True
 
