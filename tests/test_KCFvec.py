@@ -70,6 +70,7 @@ class TestKCFvec(unittest.TestCase):
     def test_input_from_knapsack(self):
         """
         input_from_knapsackのテスト
+        この場合KEGG_ATOM_LABELと順番が違うので空のdict()でないことのみ確認している
         """
         cid = "C00002657"
         nexpected = dict()
@@ -93,6 +94,7 @@ class TestKCFvec(unittest.TestCase):
     def test_input_inchi(self):
         """
         input_from_molfileのテスト
+        この場合KEGG_ATOM_LABELと順番が違うので空のdict()でないことのみ確認している
         """
         inchi = "InChI=1S/C7H6O2/c8-5-6-1-3-7(9)4-2-6/h1-5,9H"
         nexpected = dict()
@@ -104,6 +106,7 @@ class TestKCFvec(unittest.TestCase):
     def test_input_smiles(self):
         """
         input_smilesのテスト
+        この場合KEGG_ATOM_LABELと順番が違うので空のdict()でないことのみ確認している
         """
         smiles = 'O=Cc1ccc(O)cc1'
         nexpected = dict()
