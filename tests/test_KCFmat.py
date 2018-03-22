@@ -67,8 +67,6 @@ class TestKCFmat(unittest.TestCase):
         self.assertIsInstance(actual[0], expected)
         self.assertIsInstance(actual[1], expected)
         self.assertEqual(actual[0].kegg_atom_label, KEGG_ATOM_LABEL)
-        os.remove("./kegg/C00633.mol")
-        os.rmdir("./kegg")
 
     def test_input_from_knapsack(self):
         """
@@ -82,8 +80,6 @@ class TestKCFmat(unittest.TestCase):
         actual = mat.kcf_vecs
         self.assertIsInstance(actual[0], expected)
         self.assertIsInstance(actual[1], expected)
-        os.remove("./knapsack/C00002657.mol")
-        os.rmdir("./knapsack")
 
     def test_input_molfile(self):
         """

@@ -2,6 +2,7 @@ import unittest
 from kcfconvoy.Compound import Compound
 import os
 from rdkit import Chem
+import shutil
 
 MOLBLOCK = (
     " \n"
@@ -46,6 +47,7 @@ class TestCompound(unittest.TestCase):
         input_from_keggのテスト
         内部でinput_molfileを使用
         """
+        shutil.rmtree("./kegg")
         cid = "C00002"
         expected = [(0, 1), (0, 2), (0, 3), (1, 4), (1, 5), (2, 6), (2, 7),
                     (3, 8), (4, 8), (4, 9), (5, 10), (6, 11), (7, 12), (7, 13),
@@ -57,14 +59,13 @@ class TestCompound(unittest.TestCase):
         c.input_from_kegg(cid)
         actual = c.graph.edges()
         self.assertEqual(actual, expected)
-        os.remove("./kegg/C00002.mol")
-        os.rmdir("./kegg")
 
     def test_input_from_knapsack(self):
         """
         input_from_knapsackのテスト
         内部でinput_molfileを使用
         """
+        shutil.rmtree("./knapsack")
         cid = "C00037855"
         expected = [(0, 1), (0, 5), (0, 6), (1, 2), (2, 3), (3, 4), (4, 5),
                     (6, 7)]
@@ -72,8 +73,6 @@ class TestCompound(unittest.TestCase):
         c.input_from_knapsack(cid)
         actual = c.graph.edges()
         self.assertEqual(actual, expected)
-        os.remove("./knapsack/C00037855.mol")
-        os.rmdir("./knapsack")
 
     def test_input_molfile(self):
         """

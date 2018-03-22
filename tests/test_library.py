@@ -51,8 +51,6 @@ class TestLibrary(unittest.TestCase):
         lib.input_from_kegg(cid)
         actual = lib.cpds[0].graph.edges()
         self.assertEqual(actual, expected)
-        os.remove("./kegg/C00002.mol")
-        os.rmdir("./kegg")
 
     def test_input_from_knapsack(self):
         """
@@ -66,8 +64,6 @@ class TestLibrary(unittest.TestCase):
         lib.input_from_knapsack(cid)
         actual = lib.cpds[0].graph.edges()
         self.assertEqual(actual, expected)
-        os.remove("./knapsack/C00037855.mol")
-        os.rmdir("./knapsack")
 
     def test_input_molfile(self):
         """

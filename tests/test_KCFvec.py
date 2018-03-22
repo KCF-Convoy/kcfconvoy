@@ -64,8 +64,6 @@ class TestKCFvec(unittest.TestCase):
         vec.input_from_kegg(cid)
         actual = vec.kegg_atom_label
         self.assertEqual(actual, expected)
-        os.remove("./kegg/C00633.mol")
-        os.rmdir("./kegg")
 
     def test_input_from_knapsack(self):
         """
@@ -78,8 +76,6 @@ class TestKCFvec(unittest.TestCase):
         vec.input_from_knapsack(cid)
         actual = vec.kegg_atom_label
         self.assertNotEqual(actual, nexpected)
-        os.remove("./knapsack/C00002657.mol")
-        os.rmdir("./knapsack")
 
     def test_input_molfile(self):
         """
