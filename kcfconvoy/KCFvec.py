@@ -682,7 +682,7 @@ class KCFvec(Compound):
             ele2 = self.get_symbol(edge[1])
             if (ele1 == "C" and ele2 != "C") or (ele1 != "C" and ele2 == "C"):
                 c_graph.remove_edge(edge[0], edge[1])
-        subgraphs = nx.connected_component_subgraphs(c_graph)
+        subgraphs = list(nx.connected_component_subgraphs(c_graph))
         for subgraph in subgraphs:
             if len(subgraph.nodes()) < 4:
                 continue
@@ -737,12 +737,12 @@ class KCFvec(Compound):
                     vic_tmp = [self.kegg_atom_label[i][kegg_atom_key]
                                for i in vicinity[1]]
                     vic_tmp = sorted(vic_tmp)
-                    l_ele = [vic_tmp[0][0],
+                    l_ele = [vic_tmp[0],
                              self.kegg_atom_label[vicinity[0]][kegg_atom_key],
-                             vic_tmp[1][0]]
+                             vic_tmp[1]]
                     ele = "-".join(l_ele)
                     for i in range(2, len(vic_tmp)):
-                        ele += ",2-" + vic_tmp[i][0]
+                        ele += ",2-" + vic_tmp[i]
                     self._add_vec_element(ele, 1 + len(vicinity[1]),
                                           "vicinity", kegg_atom_key)
 
@@ -800,6 +800,8 @@ class KCFvec(Compound):
                             self.subs_string[-1][ring_str] = ele
 
                 for k, s in self.subs_string[-1].items():
+                    if len(k.split(",")) < 4:
+                        continue
                     if k in self.ring_string[-1].keys():
                         continue
                     elif k in s_skeleton:
@@ -882,7 +884,10 @@ class KCFvec(Compound):
                 if seq[0] != seq[-1]:
                     key = ",".join(list(map(str, sorted(seq))))
                     value = "-".join(l_labels)
-                    d_skeleton[key] = value
+                    if key not in d_skeleton.keys():
+                        d_skeleton[key] = value
+                    elif d_skeleton[key] > value:
+                        d_skeleton[key] = value
                 idx += 1
                 for i, atom in enumerate(seq):
                     if atom in l_seen:
@@ -913,7 +918,7 @@ class KCFvec(Compound):
                             main_chain.add(tuple(chain))
                         prev_idx = idx
                         prev_not_seen = True
-            if len(l_seen) < 3:
+            if len(l_seen) <= 4:
                 continue
             if len(bridges) > 0:
                 l_bridge = []
