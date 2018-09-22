@@ -35,7 +35,6 @@ class Testconverter(unittest.TestCase):
     """
     kcfconvoyのconverterのテスト
     """
-
     def test_similarity(self):
         """
         similarityのテスト
