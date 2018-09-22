@@ -106,3 +106,7 @@ venv.bak/
 tests/*.mol
 tests/kegg
 tests/knapsack
+
+jupyter_usecase/*.mol
+jupyter_usecase/kegg
+jupyter_usecase/knapsack
