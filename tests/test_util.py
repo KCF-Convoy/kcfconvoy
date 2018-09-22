@@ -3,7 +3,7 @@ import unittest
 
 from rdkit import Chem
 
-from kcfconvoy import KCFvec, converter
+from kcfconvoy import KCFvec, similarity
 
 MOLBLOCK = (
     " \n"
@@ -32,9 +32,9 @@ MOLBLOCK = (
 )
 
 
-class Testconverter(unittest.TestCase):
+class TestUtil(unittest.TestCase):
     """
-    kcfconvoyのconverterのテスト
+    kcfconvoyのutilのテスト
     """
 
     def test_similarity(self):
@@ -46,7 +46,7 @@ class Testconverter(unittest.TestCase):
         vec = KCFvec()
         vec.input_rdkmol(rdkmol)
         vec.convert_kcf_vec()
-        actual = converter.similarity(vec, vec)
+        actual = similarity(vec, vec)
         self.assertEqual(actual, expected)
 
 
