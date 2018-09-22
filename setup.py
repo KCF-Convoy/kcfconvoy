@@ -32,7 +32,8 @@ def main():
             "Topic :: Software Development :: Libraries :: Python Modules",
         ],
         packages=find_packages(),
-        install_requires=requirements
+        install_requires=requirements,
+        zip_safe=False
     )
 
 
