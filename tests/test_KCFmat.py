@@ -4,18 +4,8 @@ from kcfconvoy import KCFmat
 from kcfconvoy import KCFvec
 import os
 from rdkit import Chem
-import numpy as np
+import shutil
 
-KEGG_ATOM_LABEL = \
-    {0: {'atom_class': 'C8', 'atom_species': 'C', 'kegg_atom': 'C8y'},
-     1: {'atom_class': 'C8', 'atom_species': 'C', 'kegg_atom': 'C8x'},
-     2: {'atom_class': 'C8', 'atom_species': 'C', 'kegg_atom': 'C8x'},
-     3: {'atom_class': 'C4', 'atom_species': 'C', 'kegg_atom': 'C4a'},
-     4: {'atom_class': 'C8', 'atom_species': 'C', 'kegg_atom': 'C8x'},
-     5: {'atom_class': 'C8', 'atom_species': 'C', 'kegg_atom': 'C8x'},
-     6: {'atom_class': 'O4', 'atom_species': 'O', 'kegg_atom': 'O4a'},
-     7: {'atom_class': 'C8', 'atom_species': 'C', 'kegg_atom': 'C8y'},
-     8: {'atom_class': 'O1', 'atom_species': 'O', 'kegg_atom': 'O1a'}}
 
 MOLBLOCK = (
     " \n"
@@ -50,107 +40,146 @@ class TestKCFmat(unittest.TestCase):
     kcfconvoyのKCFmatのテスト
     """
 
-    @classmethod
-    def setUpClass(cls):
-        with open(PATH, "w")as f:
+    def setUp(self):
+        shutil.rmtree("./knapsack", ignore_errors=True)
+        shutil.rmtree("./kegg", ignore_errors=True)
+        with open(PATH, "w") as f:
             f.write(MOLBLOCK)
 
     def test_input_from_kegg(self):
         """
         input_from_keggのテスト
         """
+        KEGG_ATOM_LABEL = \
+            {0: {'atom_class': 'C8', 'atom_species': 'C', 'kegg_atom': 'C8y'},
+             1: {'atom_class': 'C8', 'atom_species': 'C', 'kegg_atom': 'C8x'},
+             2: {'atom_class': 'C8', 'atom_species': 'C', 'kegg_atom': 'C8x'},
+             3: {'atom_class': 'C4', 'atom_species': 'C', 'kegg_atom': 'C4a'},
+             4: {'atom_class': 'C8', 'atom_species': 'C', 'kegg_atom': 'C8x'},
+             5: {'atom_class': 'C8', 'atom_species': 'C', 'kegg_atom': 'C8x'},
+             6: {'atom_class': 'O4', 'atom_species': 'O', 'kegg_atom': 'O4a'},
+             7: {'atom_class': 'C8', 'atom_species': 'C', 'kegg_atom': 'C8y'},
+             8: {'atom_class': 'O1', 'atom_species': 'O', 'kegg_atom': 'O1a'}}
         cid = "C00633"
-        expected = KCFvec
         mat = KCFmat()
         mat.input_from_kegg(cid)
         mat.input_from_kegg(cid)
-        actual = mat.kcf_vecs
-        self.assertIsInstance(actual[0], expected)
-        self.assertIsInstance(actual[1], expected)
-        self.assertEqual(actual[0].kegg_atom_label, KEGG_ATOM_LABEL)
+        self.assertIsInstance(mat.kcf_vecs[0], KCFvec)
+        self.assertIsInstance(mat.kcf_vecs[1], KCFvec)
+        self.assertEqual(mat.kcf_vecs[0].kegg_atom_label, KEGG_ATOM_LABEL)
 
     def test_input_from_knapsack(self):
         """
         input_from_knapsackのテスト
         """
+        KEGG_ATOM_LABEL = \
+            {0: {'atom_species': 'C', 'atom_class': 'C8', 'kegg_atom': 'C8x'},
+             1: {'atom_species': 'C', 'atom_class': 'C8', 'kegg_atom': 'C8x'},
+             2: {'atom_species': 'C', 'atom_class': 'C8', 'kegg_atom': 'C8y'},
+             3: {'atom_species': 'C', 'atom_class': 'C8', 'kegg_atom': 'C8x'},
+             4: {'atom_species': 'C', 'atom_class': 'C8', 'kegg_atom': 'C8x'},
+             5: {'atom_species': 'C', 'atom_class': 'C8', 'kegg_atom': 'C8y'},
+             6: {'atom_species': 'C', 'atom_class': 'C4', 'kegg_atom': 'C4a'},
+             7: {'atom_species': 'O', 'atom_class': 'O1', 'kegg_atom': 'O1a'},
+             8: {'atom_species': 'O', 'atom_class': 'O4', 'kegg_atom': 'O4a'}}
         cid = "C00002657"
-        expected = KCFvec
         mat = KCFmat()
         mat.input_from_knapsack(cid)
         mat.input_from_knapsack(cid)
-        actual = mat.kcf_vecs
-        self.assertIsInstance(actual[0], expected)
-        self.assertIsInstance(actual[1], expected)
+        self.assertIsInstance(mat.kcf_vecs[0], KCFvec)
+        self.assertIsInstance(mat.kcf_vecs[1], KCFvec)
+        self.assertEqual(mat.kcf_vecs[0].kegg_atom_label, KEGG_ATOM_LABEL)
 
     def test_input_molfile(self):
         """
         input_from_molfileのテスト
         """
-        expected = KCFvec
+        KEGG_ATOM_LABEL = \
+            {0: {'atom_class': 'C8', 'atom_species': 'C', 'kegg_atom': 'C8y'},
+             1: {'atom_class': 'C8', 'atom_species': 'C', 'kegg_atom': 'C8x'},
+             2: {'atom_class': 'C8', 'atom_species': 'C', 'kegg_atom': 'C8x'},
+             3: {'atom_class': 'C4', 'atom_species': 'C', 'kegg_atom': 'C4a'},
+             4: {'atom_class': 'C8', 'atom_species': 'C', 'kegg_atom': 'C8x'},
+             5: {'atom_class': 'C8', 'atom_species': 'C', 'kegg_atom': 'C8x'},
+             6: {'atom_class': 'O4', 'atom_species': 'O', 'kegg_atom': 'O4a'},
+             7: {'atom_class': 'C8', 'atom_species': 'C', 'kegg_atom': 'C8y'},
+             8: {'atom_class': 'O1', 'atom_species': 'O', 'kegg_atom': 'O1a'}}
         mat = KCFmat()
         mat.input_molfile(PATH)
         mat.input_molfile(PATH)
-        actual = mat.kcf_vecs
-        self.assertIsInstance(actual[0], expected)
-        self.assertIsInstance(actual[1], expected)
-        self.assertEqual(actual[0].kegg_atom_label, KEGG_ATOM_LABEL)
+        self.assertIsInstance(mat.kcf_vecs[0], KCFvec)
+        self.assertIsInstance(mat.kcf_vecs[1], KCFvec)
+        self.assertEqual(mat.kcf_vecs[0].kegg_atom_label, KEGG_ATOM_LABEL)
 
     def test_input_inchi(self):
         """
         input_inchiのテスト
         """
+        KEGG_ATOM_LABEL = \
+            {0: {'atom_species': 'C', 'atom_class': 'C8', 'kegg_atom': 'C8x'},
+             1: {'atom_species': 'C', 'atom_class': 'C8', 'kegg_atom': 'C8x'},
+             2: {'atom_species': 'C', 'atom_class': 'C8', 'kegg_atom': 'C8x'},
+             3: {'atom_species': 'C', 'atom_class': 'C8', 'kegg_atom': 'C8x'},
+             4: {'atom_species': 'C', 'atom_class': 'C4', 'kegg_atom': 'C4a'},
+             5: {'atom_species': 'C', 'atom_class': 'C8', 'kegg_atom': 'C8y'},
+             6: {'atom_species': 'C', 'atom_class': 'C8', 'kegg_atom': 'C8y'},
+             7: {'atom_species': 'O', 'atom_class': 'O4', 'kegg_atom': 'O4a'},
+             8: {'atom_species': 'O', 'atom_class': 'O1', 'kegg_atom': 'O1a'}}
         inchi = "InChI=1S/C7H6O2/c8-5-6-1-3-7(9)4-2-6/h1-5,9H"
-        expected = KCFvec
         mat = KCFmat()
         mat.input_inchi(inchi)
         mat.input_inchi(inchi)
-        actual = mat.kcf_vecs
-        self.assertIsInstance(actual[0], expected)
-        self.assertIsInstance(actual[1], expected)
+        self.assertIsInstance(mat.kcf_vecs[0], KCFvec)
+        self.assertIsInstance(mat.kcf_vecs[1], KCFvec)
+        self.assertEqual(mat.kcf_vecs[0].kegg_atom_label, KEGG_ATOM_LABEL)
 
     def test_input_smiles(self):
         """
         input_smilesのテスト
         """
         smiles = 'O=Cc1ccc(O)cc1'
-        expected = KCFvec
         mat = KCFmat()
         mat.input_smiles(smiles)
         mat.input_smiles(smiles)
-        actual = mat.kcf_vecs
-        self.assertIsInstance(actual[0], expected)
-        self.assertIsInstance(actual[1], expected)
+        self.assertIsInstance(mat.kcf_vecs[0], KCFvec)
+        self.assertIsInstance(mat.kcf_vecs[1], KCFvec)
 
     def test_input_rdkmol(self):
         """
         input_rdkmolのテスト
         """
+        KEGG_ATOM_LABEL = \
+            {0: {'atom_class': 'C8', 'atom_species': 'C', 'kegg_atom': 'C8y'},
+             1: {'atom_class': 'C8', 'atom_species': 'C', 'kegg_atom': 'C8x'},
+             2: {'atom_class': 'C8', 'atom_species': 'C', 'kegg_atom': 'C8x'},
+             3: {'atom_class': 'C4', 'atom_species': 'C', 'kegg_atom': 'C4a'},
+             4: {'atom_class': 'C8', 'atom_species': 'C', 'kegg_atom': 'C8x'},
+             5: {'atom_class': 'C8', 'atom_species': 'C', 'kegg_atom': 'C8x'},
+             6: {'atom_class': 'O4', 'atom_species': 'O', 'kegg_atom': 'O4a'},
+             7: {'atom_class': 'C8', 'atom_species': 'C', 'kegg_atom': 'C8y'},
+             8: {'atom_class': 'O1', 'atom_species': 'O', 'kegg_atom': 'O1a'}}
         rdkmol = Chem.MolFromMolBlock(MOLBLOCK)
-        expected = KCFvec
         mat = KCFmat()
         mat.input_rdkmol(rdkmol)
         mat.input_rdkmol(rdkmol)
-        actual = mat.kcf_vecs
-        self.assertIsInstance(actual[0], expected)
-        self.assertIsInstance(actual[1], expected)
-        self.assertEqual(actual[0].kegg_atom_label, KEGG_ATOM_LABEL)
+        self.assertIsInstance(mat.kcf_vecs[0], KCFvec)
+        self.assertIsInstance(mat.kcf_vecs[1], KCFvec)
+        self.assertEqual(mat.kcf_vecs[0].kegg_atom_label, KEGG_ATOM_LABEL)
 
     def test_calc_kcf_matrix(self):
         """
         calc_kcf_matrixのテスト
         """
-        nexpected = np.array([])
         mat = KCFmat()
         mat.input_molfile(PATH)
         mat.input_molfile(PATH)
         mat.calc_kcf_matrix()
-        actual1 = mat.all_mat
-        actual2 = mat.mat
-        self.assertNotEqual(actual1, nexpected)
-        self.assertNotEqual(actual2, nexpected)
+        self.assertNotEqual(len(mat.all_mat), 0)
+        self.assertNotEqual(len(mat.mat), 0)
 
-    @classmethod
-    def tearDownClass(cls):
+    def tearDown(self):
+        shutil.rmtree("./knapsack", ignore_errors=True)
+        shutil.rmtree("./kegg", ignore_errors=True)
         os.remove(PATH)
 
 
