@@ -1,20 +1,21 @@
+# coding: utf-8
 import unittest
-from kcfconvoy.KCFmat import KCFmat
-from kcfconvoy.KCFvec import KCFvec
+from kcfconvoy import KCFmat
+from kcfconvoy import KCFvec
 import os
 from rdkit import Chem
 import numpy as np
 
 KEGG_ATOM_LABEL = \
-            {0: {'atom_class': 'C8', 'atom_species': 'C', 'kegg_atom': 'C8y'},
-             1: {'atom_class': 'C8', 'atom_species': 'C', 'kegg_atom': 'C8x'},
-             2: {'atom_class': 'C8', 'atom_species': 'C', 'kegg_atom': 'C8x'},
-             3: {'atom_class': 'C4', 'atom_species': 'C', 'kegg_atom': 'C4a'},
-             4: {'atom_class': 'C8', 'atom_species': 'C', 'kegg_atom': 'C8x'},
-             5: {'atom_class': 'C8', 'atom_species': 'C', 'kegg_atom': 'C8x'},
-             6: {'atom_class': 'O4', 'atom_species': 'O', 'kegg_atom': 'O4a'},
-             7: {'atom_class': 'C8', 'atom_species': 'C', 'kegg_atom': 'C8y'},
-             8: {'atom_class': 'O1', 'atom_species': 'O', 'kegg_atom': 'O1a'}}
+    {0: {'atom_class': 'C8', 'atom_species': 'C', 'kegg_atom': 'C8y'},
+     1: {'atom_class': 'C8', 'atom_species': 'C', 'kegg_atom': 'C8x'},
+     2: {'atom_class': 'C8', 'atom_species': 'C', 'kegg_atom': 'C8x'},
+     3: {'atom_class': 'C4', 'atom_species': 'C', 'kegg_atom': 'C4a'},
+     4: {'atom_class': 'C8', 'atom_species': 'C', 'kegg_atom': 'C8x'},
+     5: {'atom_class': 'C8', 'atom_species': 'C', 'kegg_atom': 'C8x'},
+     6: {'atom_class': 'O4', 'atom_species': 'O', 'kegg_atom': 'O4a'},
+     7: {'atom_class': 'C8', 'atom_species': 'C', 'kegg_atom': 'C8y'},
+     8: {'atom_class': 'O1', 'atom_species': 'O', 'kegg_atom': 'O1a'}}
 
 MOLBLOCK = (
     " \n"

@@ -1,8 +1,7 @@
-#!/bin/env python
 # coding: utf-8
 
 import networkx as nx
-from kcfconvoy.Compound import Compound
+from .Compound import Compound
 from rdkit import Chem
 from rdkit.Chem import AllChem
 

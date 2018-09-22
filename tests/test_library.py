@@ -1,5 +1,6 @@
+# coding: utf-8
 import unittest
-from kcfconvoy.Library import Library
+from kcfconvoy import Library
 import os
 from rdkit import Chem
 
