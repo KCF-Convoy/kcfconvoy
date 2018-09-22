@@ -13,7 +13,8 @@ dependencies:
   - chardet=3.0.4=py36h0f667ec_1
   - conda=4.5.11=py36_0
   - conda-env=2.6.0=h36134e3_1
-  - cryptography=2.2.2=py36h14c3975_0
+  - cryptography=2.3=py36hb7f436b_1
+  - cryptography-vectors=2.3.1=py36_0
   - fontconfig=2.13.0=h9420a91_0
   - freetype=2.9.1=h8a8886c_0
   - glib=2.56.1=h000015b_0
@@ -86,6 +87,7 @@ dependencies:
     - jupyter-client==5.2.3
     - jupyter-console==5.2.0
     - jupyter-core==4.4.0
+    - kcfconvoy==0.0.4
     - kiwisolver==1.0.1
     - markupsafe==1.0
     - matplotlib==3.0.0
