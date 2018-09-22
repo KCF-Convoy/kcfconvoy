@@ -1,5 +1,6 @@
 # coding: utf-8
 import os
+import shutil
 import unittest
 
 from rdkit import Chem
@@ -40,7 +41,9 @@ class TestLibrary(unittest.TestCase):
     """
 
     def setUp(self):
-        with open(PATH, "w")as f:
+        shutil.rmtree("./knapsack", ignore_errors=True)
+        shutil.rmtree("./kegg", ignore_errors=True)
+        with open(PATH, "w") as f:
             f.write(MOLBLOCK)
 
     def test_input_from_kegg(self):
@@ -139,6 +142,8 @@ class TestLibrary(unittest.TestCase):
         self.assertNotEqual(lib.fps[1], lib.fps[2])
 
     def tearDown(self):
+        shutil.rmtree("./knapsack", ignore_errors=True)
+        shutil.rmtree("./kegg", ignore_errors=True)
         os.remove(PATH)
 
 
