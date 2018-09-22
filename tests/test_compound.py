@@ -1,9 +1,11 @@
 # coding: utf-8
-import unittest
-from kcfconvoy import Compound
 import os
-from rdkit import Chem
 import shutil
+import unittest
+
+from rdkit import Chem
+
+from kcfconvoy import Compound
 
 MOLBLOCK = (
     " \n"

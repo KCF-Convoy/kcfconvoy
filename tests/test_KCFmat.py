@@ -1,11 +1,11 @@
 # coding: utf-8
-import unittest
-from kcfconvoy import KCFmat
-from kcfconvoy import KCFvec
 import os
-from rdkit import Chem
 import shutil
+import unittest
 
+from rdkit import Chem
+
+from kcfconvoy import KCFmat, KCFvec
 
 MOLBLOCK = (
     " \n"

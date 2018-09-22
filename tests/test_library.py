@@ -1,8 +1,10 @@
 # coding: utf-8
-import unittest
-from kcfconvoy import Library
 import os
+import unittest
+
 from rdkit import Chem
+
+from kcfconvoy import Library
 
 MOLBLOCK = (
     " \n"
@@ -36,6 +38,7 @@ class TestLibrary(unittest.TestCase):
     """
     kcfconvoyのLibraryのテスト
     """
+
     def setUp(self):
         with open(PATH, "w")as f:
             f.write(MOLBLOCK)

@@ -1,8 +1,9 @@
 # coding: utf-8
 import unittest
-from kcfconvoy import converter
-from kcfconvoy import KCFvec
+
 from rdkit import Chem
+
+from kcfconvoy import KCFvec, converter
 
 MOLBLOCK = (
     " \n"
@@ -35,6 +36,7 @@ class Testconverter(unittest.TestCase):
     """
     kcfconvoyのconverterのテスト
     """
+
     def test_similarity(self):
         """
         similarityのテスト

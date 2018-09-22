@@ -1,11 +1,13 @@
 # coding: utf-8
-import unittest
-from kcfconvoy import KCFvec
 import os
 import shutil
-from rdkit import Chem
-import pandas as pd
+import unittest
 from collections import defaultdict
+
+import pandas as pd
+from rdkit import Chem
+
+from kcfconvoy import KCFvec
 
 KEGG_ATOM_LABEL = \
     {0: {'atom_class': 'C8', 'atom_species': 'C', 'kegg_atom': 'C8y'},

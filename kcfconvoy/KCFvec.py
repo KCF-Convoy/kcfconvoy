@@ -688,7 +688,7 @@ class KCFvec(Compound):
             if len(subgraph.nodes()) < 4:
                 continue
             s_subgraph = ",".join(list(map(str, sorted(subgraph.nodes()))))
-            if subgraph.nodes()[0]["symbol"] == "C":
+            if subgraph.nodes()[min(list(subgraph.nodes()))]["symbol"] == "C":
                 s_skeleton.add(s_subgraph)
             else:
                 s_inorganic.add(s_subgraph)
