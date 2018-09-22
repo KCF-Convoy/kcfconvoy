@@ -677,17 +677,18 @@ class KCFvec(Compound):
         s_skeleton = set()
         s_inorganic = set()
         c_graph = deepcopy(self.graph)
-        for edge in c_graph.edges():
+        c_graph_edges = deepcopy(self.graph.edges())
+        for edge in c_graph_edges:
             ele1 = self.get_symbol(edge[0])
             ele2 = self.get_symbol(edge[1])
             if (ele1 == "C" and ele2 != "C") or (ele1 != "C" and ele2 == "C"):
                 c_graph.remove_edge(edge[0], edge[1])
-        subgraphs = list(nx.connected_component_subgraphs(c_graph))
+        subgraphs = [c_graph.subgraph(c).copy() for c in nx.connected_components(c_graph)]
         for subgraph in subgraphs:
             if len(subgraph.nodes()) < 4:
                 continue
             s_subgraph = ",".join(list(map(str, sorted(subgraph.nodes()))))
-            if self.get_symbol(subgraph.nodes()[0]) == "C":
+            if subgraph.nodes()[min(list(subgraph.nodes()))]["symbol"] == "C":
                 s_skeleton.add(s_subgraph)
             else:
                 s_inorganic.add(s_subgraph)

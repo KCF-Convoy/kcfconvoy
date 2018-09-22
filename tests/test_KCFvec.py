@@ -1,20 +1,24 @@
-import unittest
-from kcfconvoy.KCFvec import KCFvec
+# coding: utf-8
 import os
-from rdkit import Chem
-import pandas as pd
+import shutil
+import unittest
 from collections import defaultdict
 
+import pandas as pd
+from rdkit import Chem
+
+from kcfconvoy import KCFvec
+
 KEGG_ATOM_LABEL = \
-            {0: {'atom_class': 'C8', 'atom_species': 'C', 'kegg_atom': 'C8y'},
-             1: {'atom_class': 'C8', 'atom_species': 'C', 'kegg_atom': 'C8x'},
-             2: {'atom_class': 'C8', 'atom_species': 'C', 'kegg_atom': 'C8x'},
-             3: {'atom_class': 'C4', 'atom_species': 'C', 'kegg_atom': 'C4a'},
-             4: {'atom_class': 'C8', 'atom_species': 'C', 'kegg_atom': 'C8x'},
-             5: {'atom_class': 'C8', 'atom_species': 'C', 'kegg_atom': 'C8x'},
-             6: {'atom_class': 'O4', 'atom_species': 'O', 'kegg_atom': 'O4a'},
-             7: {'atom_class': 'C8', 'atom_species': 'C', 'kegg_atom': 'C8y'},
-             8: {'atom_class': 'O1', 'atom_species': 'O', 'kegg_atom': 'O1a'}}
+    {0: {'atom_class': 'C8', 'atom_species': 'C', 'kegg_atom': 'C8y'},
+     1: {'atom_class': 'C8', 'atom_species': 'C', 'kegg_atom': 'C8x'},
+     2: {'atom_class': 'C8', 'atom_species': 'C', 'kegg_atom': 'C8x'},
+     3: {'atom_class': 'C4', 'atom_species': 'C', 'kegg_atom': 'C4a'},
+     4: {'atom_class': 'C8', 'atom_species': 'C', 'kegg_atom': 'C8x'},
+     5: {'atom_class': 'C8', 'atom_species': 'C', 'kegg_atom': 'C8x'},
+     6: {'atom_class': 'O4', 'atom_species': 'O', 'kegg_atom': 'O4a'},
+     7: {'atom_class': 'C8', 'atom_species': 'C', 'kegg_atom': 'C8y'},
+     8: {'atom_class': 'O1', 'atom_species': 'O', 'kegg_atom': 'O1a'}}
 
 MOLBLOCK = (
     " \n"
@@ -49,9 +53,10 @@ class TestKCFvec(unittest.TestCase):
     kcfconvoyのKCFvecのテスト
     """
 
-    @classmethod
-    def setUpClass(cls):
-        with open(PATH, "w")as f:
+    def setUp(self):
+        shutil.rmtree("./knapsack", ignore_errors=True)
+        shutil.rmtree("./kegg", ignore_errors=True)
+        with open(PATH, "w") as f:
             f.write(MOLBLOCK)
 
     def test_input_from_kegg(self):
@@ -68,14 +73,21 @@ class TestKCFvec(unittest.TestCase):
     def test_input_from_knapsack(self):
         """
         input_from_knapsackのテスト
-        この場合KEGG_ATOM_LABELと順番が違うので空のdict()でないことのみ確認している
         """
+        label = {0: {'atom_species': 'C', 'atom_class': 'C8', 'kegg_atom': 'C8x'},
+                 1: {'atom_species': 'C', 'atom_class': 'C8', 'kegg_atom': 'C8x'},
+                 2: {'atom_species': 'C', 'atom_class': 'C8', 'kegg_atom': 'C8y'},
+                 3: {'atom_species': 'C', 'atom_class': 'C8', 'kegg_atom': 'C8x'},
+                 4: {'atom_species': 'C', 'atom_class': 'C8', 'kegg_atom': 'C8x'},
+                 5: {'atom_species': 'C', 'atom_class': 'C8', 'kegg_atom': 'C8y'},
+                 6: {'atom_species': 'C', 'atom_class': 'C4', 'kegg_atom': 'C4a'},
+                 7: {'atom_species': 'O', 'atom_class': 'O1', 'kegg_atom': 'O1a'},
+                 8: {'atom_species': 'O', 'atom_class': 'O4', 'kegg_atom': 'O4a'}}
         cid = "C00002657"
-        nexpected = dict()
         vec = KCFvec()
         vec.input_from_knapsack(cid)
         actual = vec.kegg_atom_label
-        self.assertNotEqual(actual, nexpected)
+        self.assertEqual(actual, label)
 
     def test_input_molfile(self):
         """
@@ -90,26 +102,41 @@ class TestKCFvec(unittest.TestCase):
     def test_input_inchi(self):
         """
         input_from_molfileのテスト
-        この場合KEGG_ATOM_LABELと順番が違うので空のdict()でないことのみ確認している
         """
+        label = {0: {'atom_species': 'C', 'atom_class': 'C8', 'kegg_atom': 'C8x'},
+                 1: {'atom_species': 'C', 'atom_class': 'C8', 'kegg_atom': 'C8x'},
+                 2: {'atom_species': 'C', 'atom_class': 'C8', 'kegg_atom': 'C8x'},
+                 3: {'atom_species': 'C', 'atom_class': 'C8', 'kegg_atom': 'C8x'},
+                 4: {'atom_species': 'C', 'atom_class': 'C4', 'kegg_atom': 'C4a'},
+                 5: {'atom_species': 'C', 'atom_class': 'C8', 'kegg_atom': 'C8y'},
+                 6: {'atom_species': 'C', 'atom_class': 'C8', 'kegg_atom': 'C8y'},
+                 7: {'atom_species': 'O', 'atom_class': 'O4', 'kegg_atom': 'O4a'},
+                 8: {'atom_species': 'O', 'atom_class': 'O1', 'kegg_atom': 'O1a'}}
         inchi = "InChI=1S/C7H6O2/c8-5-6-1-3-7(9)4-2-6/h1-5,9H"
-        nexpected = dict()
         vec = KCFvec()
         vec.input_inchi(inchi)
         actual = vec.kegg_atom_label
-        self.assertNotEqual(actual, nexpected)
+        self.assertEqual(actual, label)
 
     def test_input_smiles(self):
         """
         input_smilesのテスト
         この場合KEGG_ATOM_LABELと順番が違うので空のdict()でないことのみ確認している
         """
+        label = {0: {'atom_species': 'O', 'atom_class': 'O4', 'kegg_atom': 'O4a'},
+                 1: {'atom_species': 'C', 'atom_class': 'C4', 'kegg_atom': 'C4a'},
+                 2: {'atom_species': 'C', 'atom_class': 'C8', 'kegg_atom': 'C8y'},
+                 3: {'atom_species': 'C', 'atom_class': 'C8', 'kegg_atom': 'C8x'},
+                 4: {'atom_species': 'C', 'atom_class': 'C8', 'kegg_atom': 'C8x'},
+                 5: {'atom_species': 'C', 'atom_class': 'C8', 'kegg_atom': 'C8y'},
+                 6: {'atom_species': 'O', 'atom_class': 'O1', 'kegg_atom': 'O1a'},
+                 7: {'atom_species': 'C', 'atom_class': 'C8', 'kegg_atom': 'C8x'},
+                 8: {'atom_species': 'C', 'atom_class': 'C8', 'kegg_atom': 'C8x'}}
         smiles = 'O=Cc1ccc(O)cc1'
-        nexpected = dict()
         vec = KCFvec()
         vec.input_smiles(smiles)
         actual = vec.kegg_atom_label
-        self.assertNotEqual(actual, nexpected)
+        self.assertEqual(actual, label)
 
     def test_input_rdkmol(self):
         """
@@ -153,8 +180,9 @@ class TestKCFvec(unittest.TestCase):
         actual = vec.string2seq
         self.assertNotEqual(actual, expected)
 
-    @classmethod
-    def tearDownClass(cls):
+    def tearDown(self):
+        shutil.rmtree("./knapsack", ignore_errors=True)
+        shutil.rmtree("./kegg", ignore_errors=True)
         os.remove(PATH)
 
 

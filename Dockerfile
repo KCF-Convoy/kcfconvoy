@@ -1,0 +1,37 @@
+FROM ubuntu:16.04
+MAINTAINER suecharo suecharo@g.ecc.u-tokyo.ac.jp
+
+ENV LANG=C.UTF-8 LC_ALL=C.UTF-8
+RUN apt update \
+ && apt install -y \
+    curl \
+    bzip2 \
+    libxrender1 \
+    libxext6 \
+    build-essential \
+    python-dev \
+ && apt clean \
+ && rm -rf /var/lib/apt/lists/*
+
+ENV PATH /opt/conda/bin:$PATH
+WORKDIR /opt/kcfconvoy
+COPY conda-env.yml /opt/kcfconvoy/
+
+RUN curl -L https://repo.anaconda.com/miniconda/Miniconda3-4.5.4-Linux-x86_64.sh -o /tmp/miniconda.sh \
+ && /bin/bash /tmp/miniconda.sh -b -p /opt/conda \
+ && rm /tmp/miniconda.sh \
+ && conda env create --name kcfconvoy --file conda-env.yml \
+ && /opt/conda/bin/conda clean -tipsy \
+ && ln -s /opt/conda/etc/profile.d/conda.sh /etc/profile.d/conda.sh \
+ && echo ". /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc \
+ && echo "conda activate kcfconvoy" >> ~/.bashrc
+
+COPY setup.py /opt/kcfconvoy/
+COPY requirements.txt /opt/kcfconvoy/
+COPY kcfconvoy /opt/kcfconvoy/kcfconvoy/
+COPY tests /opt/kcfconvoy/tests/
+COPY jupyter_usecase /opt/kcfconvoy/jupyter_usecase/
+
+RUN  . /opt/conda/etc/profile.d/conda.sh \
+ && conda activate kcfconvoy \
+ && python setup.py install

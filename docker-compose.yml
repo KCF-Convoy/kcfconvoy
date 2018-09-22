@@ -1,0 +1,12 @@
+version: "3"
+services:
+  kcfconvoy:
+    image: kcfconvoy
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: kcfconvoy
+    ports:
+      - 8888:8888
+    tty: true
+    command: ["tail", "-f", "/dev/null"]

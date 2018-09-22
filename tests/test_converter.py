@@ -1,7 +1,9 @@
+# coding: utf-8
 import unittest
-from kcfconvoy import converter
-from kcfconvoy.KCFvec import KCFvec
+
 from rdkit import Chem
+
+from kcfconvoy import KCFvec, converter
 
 MOLBLOCK = (
     " \n"
