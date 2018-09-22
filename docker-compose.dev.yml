@@ -1,0 +1,18 @@
+version: "3"
+services:
+  kcfconvoy:
+    image: kcfconvoy-dev
+    build:
+      context: .
+      dockerfile: Dockerfile-dev
+    container_name: kcfconvoy-dev
+    ports:
+      - 8888:8888
+    environment:
+      - PYTHONPATH=/opt/kcfcodnvoy
+    tty: true
+    volumes:
+      - ./ipynb:/opt/kcfconvoy/ipynb
+      - ./kcfconvoy:/opt/kcfconvoy/kcfconvoy
+      - ./tests:/opt/kcfconvoy/tests
+    command: ["tail", "-f", "/dev/null"]
