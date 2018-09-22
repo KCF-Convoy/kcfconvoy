@@ -9,6 +9,4 @@ services:
     ports:
       - 8888:8888
     tty: true
-    volumes:
-      - .:/mount
     command: ["tail", "-f", "/dev/null"]

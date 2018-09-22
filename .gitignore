@@ -102,3 +102,7 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+tests/*.mol
+tests/kegg
+tests/knapsack

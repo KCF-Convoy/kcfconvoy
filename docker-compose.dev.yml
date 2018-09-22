@@ -9,7 +9,7 @@ services:
     ports:
       - 8888:8888
     environment:
-      - PYTHONPATH=/opt/kcfcodnvoy
+      - PYTHONPATH=/opt/kcfconvoy
     tty: true
     volumes:
       - ./ipynb:/opt/kcfconvoy/ipynb
