@@ -1,5 +1,5 @@
 # coding: utf-8
-from setuptools import setup, find_packages
+from setuptools import setup
 
 with open("requirements.txt") as f:
     requirements = f.read().splitlines()
@@ -31,7 +31,7 @@ def main():
             "Topic :: Scientific/Engineering :: Chemistry",
             "Topic :: Software Development :: Libraries :: Python Modules",
         ],
-        packages=find_packages(),
+        packages=["kcfconvoy"],
         install_requires=requirements,
         zip_safe=False
     )

@@ -8,6 +8,8 @@ RUN apt update \
     bzip2 \
     libxrender1 \
     libxext6 \
+    build-essential \
+    python-dev \
  && apt clean \
  && rm -rf /var/lib/apt/lists/*
 

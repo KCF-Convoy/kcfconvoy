@@ -12,7 +12,5 @@ services:
       - PYTHONPATH=/opt/kcfconvoy
     tty: true
     volumes:
-      - ./ipynb:/opt/kcfconvoy/ipynb
-      - ./kcfconvoy:/opt/kcfconvoy/kcfconvoy
-      - ./tests:/opt/kcfconvoy/tests
+      - .:/opt/kcfconvoy/
     command: ["tail", "-f", "/dev/null"]

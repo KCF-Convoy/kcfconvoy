@@ -8,6 +8,8 @@ RUN apt update \
     bzip2 \
     libxrender1 \
     libxext6 \
+    build-essential \
+    python-dev \
  && apt clean \
  && rm -rf /var/lib/apt/lists/*
 
@@ -25,6 +27,11 @@ RUN curl -L https://repo.anaconda.com/miniconda/Miniconda3-4.5.4-Linux-x86_64.sh
  && echo "conda activate kcfconvoy" >> ~/.bashrc
 
 COPY setup.py /opt/kcfconvoy/
+COPY requirements.txt /opt/kcfconvoy/
 COPY kcfconvoy /opt/kcfconvoy/kcfconvoy/
+COPY tests /opt/kcfconvoy/tests/
+COPY jupyter_usecase /opt/kcfconvoy/jupyter_usecase/
 
-RUN python /opt/kcfconvoy/setup.py install
+RUN  . /opt/conda/etc/profile.d/conda.sh \
+ && conda activate kcfconvoy \
+ && python setup.py install
