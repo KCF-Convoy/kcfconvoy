@@ -340,7 +340,7 @@ class Compound:
         edge_labels = dict()
         for edge in self.graph.edges(data=True):
             edge_labels[(edge[0], edge[1])] = edge[2]["index"]
-        nx.draw(self.graph, pos, node_color=node_color, alpha=0.4)
+        nx.draw_networkx(self.graph, pos, node_color=node_color, alpha=0.4)
         nx.draw_networkx_labels(self.graph, pos, fontsize=6, labels=node_label)
         nx.draw_networkx_edge_labels(self.graph, pos, edge_labels=edge_labels,
                                      fontsize=3, font_color="b")

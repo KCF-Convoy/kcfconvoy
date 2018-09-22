@@ -29,12 +29,16 @@ MOLBLOCK = (
     "  6  8  2  0     0  0\n"
     "M  END\n"
 )
+PATH = "./test.mol"
 
 
 class TestLibrary(unittest.TestCase):
     """
     kcfconvoyのLibraryのテスト
     """
+    def setUp(self):
+        with open(PATH, "w")as f:
+            f.write(MOLBLOCK)
 
     def test_input_from_kegg(self):
         """
@@ -43,14 +47,14 @@ class TestLibrary(unittest.TestCase):
         """
         cid = "C00002"
         expected = [(0, 1), (0, 2), (0, 3), (1, 4), (1, 5), (2, 6), (2, 7),
-                    (3, 8), (4, 8), (4, 9), (5, 10), (6, 11), (7, 12), (7, 13),
+                    (3, 8), (4, 9), (4, 8), (5, 10), (6, 11), (7, 12), (7, 13),
                     (9, 14), (9, 15), (10, 14), (11, 16), (11, 12), (12, 17),
                     (16, 18), (18, 19), (19, 20), (19, 21), (19, 22), (20, 23),
                     (23, 24), (23, 25), (23, 26), (24, 27), (27, 28), (27, 29),
                     (27, 30)]
         lib = Library()
         lib.input_from_kegg(cid)
-        actual = lib.cpds[0].graph.edges()
+        actual = list(list(lib.cpds[0].graph.edges()))
         self.assertEqual(actual, expected)
 
     def test_input_from_knapsack(self):
@@ -63,7 +67,7 @@ class TestLibrary(unittest.TestCase):
                     (6, 7)]
         lib = Library()
         lib.input_from_knapsack(cid)
-        actual = lib.cpds[0].graph.edges()
+        actual = list(lib.cpds[0].graph.edges())
         self.assertEqual(actual, expected)
 
     def test_input_molfile(self):
@@ -74,12 +78,9 @@ class TestLibrary(unittest.TestCase):
         expected = [(0, 1), (0, 2), (0, 3), (1, 4), (2, 5), (3, 6), (4, 7),
                     (5, 7), (7, 8)]
         lib = Library()
-        with open("./test.mol", "w")as f:
-            f.write(MOLBLOCK)
-        lib.input_molfile("test.mol")
-        actual = lib.cpds[0].graph.edges()
+        lib.input_molfile("./test.mol")
+        actual = list(lib.cpds[0].graph.edges())
         self.assertEqual(actual, expected)
-        os.remove("./test.mol")
 
     def test_input_inchi(self):
         """
@@ -88,11 +89,11 @@ class TestLibrary(unittest.TestCase):
         """
         inchi = ("InChI=1S/C6H8O6/c7-1-2(8)5-3(9)4(10)6(11)12-5/h2,"
                  "5,7-8,10-11H,1H2/t2-,5+/m0/s1")
-        expected = [(0, 1), (0, 6), (1, 4), (1, 7), (2, 8), (2, 3), (2, 4),
-                    (3, 9), (3, 5), (4, 11), (5, 11), (5, 10)]
+        expected = [(0, 1), (0, 6), (1, 4), (1, 7), (2, 3), (2, 4), (2, 8), (3, 5),
+                    (3, 9), (4, 11), (5, 10), (5, 11)]
         lib = Library()
         lib.input_inchi(inchi)
-        actual = lib.cpds[0].graph.edges()
+        actual = list(lib.cpds[0].graph.edges())
         self.assertEqual(actual, expected)
 
     def test_input_smiles(self):
@@ -101,11 +102,11 @@ class TestLibrary(unittest.TestCase):
         内部でinput_rdkmolを使用
         """
         smiles = 'O=Cc1ccc(O)cc1'
-        expected = [(0, 1), (1, 2), (2, 8), (2, 3), (3, 4), (4, 5), (5, 6),
+        expected = [(0, 1), (1, 2), (2, 3), (2, 8), (3, 4), (4, 5), (5, 6),
                     (5, 7), (7, 8)]
         lib = Library()
         lib.input_smiles(smiles)
-        actual = lib.cpds[0].graph.edges()
+        actual = list(lib.cpds[0].graph.edges())
         self.assertEqual(actual, expected)
 
     def test_input_rdkmol(self):
@@ -117,7 +118,7 @@ class TestLibrary(unittest.TestCase):
                     (5, 7), (7, 8)]
         lib = Library()
         lib.input_rdkmol(rdkmol)
-        actual = lib.cpds[0].graph.edges()
+        actual = list(lib.cpds[0].graph.edges())
         self.assertEqual(actual, expected)
 
     def test_calc_fingerprints(self):
@@ -133,6 +134,9 @@ class TestLibrary(unittest.TestCase):
         self.assertEqual(lib.fps[0], lib.fps[1])
         self.assertNotEqual(lib.fps[0], lib.fps[2])
         self.assertNotEqual(lib.fps[1], lib.fps[2])
+
+    def tearDown(self):
+        os.remove(PATH)
 
 
 if __name__ == "__main__":
