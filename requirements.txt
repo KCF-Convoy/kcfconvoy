@@ -4,7 +4,9 @@ bleach==2.1.4
 certifi==2018.8.24
 cffi==1.11.5
 chardet==3.0.4
-cryptography==2.2.2
+conda==4.5.11
+cryptography==2.3
+cryptography-vectors==2.3.1
 cycler==0.10.0
 Cython==0.28.5
 decorator==4.3.0
