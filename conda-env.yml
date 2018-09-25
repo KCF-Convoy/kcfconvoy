@@ -87,7 +87,6 @@ dependencies:
     - jupyter-client==5.2.3
     - jupyter-console==5.2.0
     - jupyter-core==4.4.0
-    - kcfconvoy==0.0.4
     - kiwisolver==1.0.1
     - markupsafe==1.0
     - matplotlib==3.0.0
