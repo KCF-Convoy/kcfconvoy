@@ -66,7 +66,7 @@ class Library:
         self.names = []
         self.fps = []
 
-    def calc_fingerprints(self, fingerprint="PatternFingerprint"):
+    def calc_fingerprints(self, fingerprint="MorganFingerprint"):
         """
         fingerprint を計算する。
 

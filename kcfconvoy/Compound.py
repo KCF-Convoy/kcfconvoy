@@ -390,7 +390,7 @@ class Compound:
         """
         for i in self.graph.nodes():
             for j in self.graph.nodes():
-                if length == 3 or i == j:
+                if length == 3 and i == j:
                     continue
                 if bidirectonal:
                     pass
@@ -425,7 +425,7 @@ class Compound:
         """
         3連続の結合を全て取り出す。
         """
-        return self.find_seq(3, bidirectonal=False)
+        return self.find_seq(3, bidirectonal=True)
 
     def get_vicinities(self):
         """
