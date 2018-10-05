@@ -189,7 +189,7 @@ class Compound:
         self.input_rdkmol(Chem.MolFromSmiles(smiles))
 
         return True
-
+    
     def input_rdkmol(self, rdkmol):
         """
         rdkitのmol形式を受け取り，mol形式をmolblockに直し登録する。
@@ -390,22 +390,23 @@ class Compound:
         """
         for i in self.graph.nodes():
             for j in self.graph.nodes():
-                if length == 3 and i == j:
+                if length == 3 or i == j:
                     continue
                 if bidirectonal:
                     pass
-                elif i > j:
-                    continue
-                for seq in nx.all_simple_paths(self.graph, i, j,
-                                               cutoff=(length + 1)):
+                elif i >= j:
+                     continue
+                for seq in nx.all_simple_paths(self.graph, i, j, cutoff=(length)):
                     if len(seq) == 2:
                         pass
                     elif len(seq) <= length:
                         yield seq
-                    elif len(seq) == length + 1:
-                        if seq[0] == seq[-1]:
-                            yield seq
-                        continue
+                    if seq[0] in self.graph.adj[seq[-1]].keys():
+                        seq2 = [n for n in seq]
+                        seq2.append(seq[0])
+                        yield seq2
+                    continue
+                            
 
     def has_bond(self, atom_1, atom_2):
         """
