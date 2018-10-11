@@ -1,4 +1,4 @@
-version: "3"
+version: "4"
 services:
   kcfconvoy:
     image: kcfconvoy-dev
@@ -9,8 +9,10 @@ services:
     ports:
       - 8888:8888
     environment:
+      TZ: Asia/Tokyo
       - PYTHONPATH=/opt/kcfconvoy
     tty: true
     volumes:
       - .:/opt/kcfconvoy/
+      - /etc/localtime:/etc/localtime:ro
     command: ["tail", "-f", "/dev/null"]
