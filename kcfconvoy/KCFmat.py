@@ -16,38 +16,50 @@ class KCFmat(Library):
         self.mat = np.array([])
 
     def input_from_kegg(self, cid, name=None):
-        super().input_from_kegg(cid, name)
-        self._append_kcf_vec()
+        if super().input_from_kegg(cid, name):
+            self._append_kcf_vec()
+        else:
+            return False
 
         return True
 
     def input_from_knapsack(self, cid, name=None):
-        super().input_from_knapsack(cid, name)
-        self._append_kcf_vec()
+        if super().input_from_knapsack(cid, name):
+            self._append_kcf_vec()
+        else:
+            return False
 
         return True
 
     def input_molfile(self, molfile, name=None):
-        super().input_molfile(molfile, name)
-        self._append_kcf_vec()
+        if super().input_molfile(molfile, name):
+            self._append_kcf_vec()
+        else:
+            return False
 
         return True
 
     def input_inchi(self, inchi, name=None):
-        super().input_inchi(inchi, name)
-        self._append_kcf_vec()
+        if super().input_inchi(inchi, name):
+            self._append_kcf_vec()
+        else:
+            return False
 
         return True
 
     def input_smiles(self, smiles, name=None):
-        super().input_smiles(smiles, name)
-        self._append_kcf_vec()
+        if super().input_smiles(smiles, name):
+            self._append_kcf_vec()
+        else:
+            return False
 
         return True
 
     def input_rdkmol(self, mol, name=None):
-        super().input_rdkmol(mol, name)
-        self._append_kcf_vec()
+        if super().input_rdkmol(mol, name):
+            self._append_kcf_vec()
+        else:
+            return False
 
         return True
 
@@ -61,11 +73,14 @@ class KCFmat(Library):
 
         return True
 
+    def _get_num_string(self, kcfvec, string):
+        if string in kcfvec.string2seq().keys():
+            return len(kcfvec.string2seq()[string])
+        else:
+            return 0   
+
     def calc_kcf_matrix(self, ratio=400):
-        self.all_mat = np.zeros((len(self.kcf_vecs), len(self.all_strs)))
-        for i, kcf_vec in enumerate(self.kcf_vecs):
-            for ele, label in kcf_vec.kcf_vec.items():
-                self.all_mat[i][self.all_strs.index(ele)] = label["count"]
+        self.all_mat = np.array([[self._get_num_string(kcfvec, string) for string in self.all_strs] for kcfvec in self.kcf_vecs])
         kcf_mat_T = self.all_mat.T
         min_cpd = max(len(self.all_mat) / ratio, 1)
         self.mask_array = np.array(

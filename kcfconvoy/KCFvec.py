@@ -21,10 +21,10 @@ class KCFvec(Compound):
         - input_smiles
         - input_rdkmol
         - convert_kcf_vec
-            input mol がされた状態で呼ぶ。
+            should be called after input_* methods
         - get_pandas_df
         - string2seq
-    内部 method
+    internal method:
         - _rdkmol_to_kcf
             input 系の method で rdkit の mol が登録された後に，呼ばれる。
             self.kcf の登録。
@@ -74,6 +74,7 @@ class KCFvec(Compound):
         self.kcf_vec = defaultdict(dict)
         self.ring_string = []
         self.subs_string = []
+        self.string_2_seq = {}
 
     def input_from_kegg(self, cid, cpd_name="NoName"):
         """
@@ -81,9 +82,11 @@ class KCFvec(Compound):
         KEGG_IDからmol形式でdownloadし，./kegg/cid.molとして保存する。
         self.kcf の生成まで行う。
         """
-        super().input_from_kegg(cid)
-        self.cpd_name = cpd_name
-        self._rdkmol_to_kcf()
+        if super().input_from_kegg(cid):
+            self.cpd_name = cpd_name
+            self._rdkmol_to_kcf()
+        else:
+            return False
 
         return True
 
@@ -93,9 +96,11 @@ class KCFvec(Compound):
         knapsack_IDからmol形式でdownloadし，./knapsack/cid.molとして保存する。
         self.kcf の生成まで行う。
         """
-        super().input_from_knapsack(cid)
-        self.cpd_name = cpd_name
-        self._rdkmol_to_kcf()
+        if super().input_from_knapsack(cid):
+            self.cpd_name = cpd_name
+            self._rdkmol_to_kcf()
+        else:
+            return False
 
         return True
 
@@ -107,9 +112,11 @@ class KCFvec(Compound):
         ここで，self._compute_2d_coords()を呼んでおく。
         self.kcf の生成まで行う。
         """
-        super().input_molfile(molfile)
-        self.cpd_name = cpd_name
-        self._rdkmol_to_kcf()
+        if super().input_molfile(molfile):
+            self.cpd_name = cpd_name
+            self._rdkmol_to_kcf()
+        else:
+            return False
 
         return True
 
@@ -117,9 +124,11 @@ class KCFvec(Compound):
         """
         inchi形式を受け取って，rdkitのmol形式に直し，mol形式をmolblockに直し登録する。
         """
-        super().input_inchi(inchi)
-        self.cpd_name = cpd_name
-        self._rdkmol_to_kcf()
+        if super().input_inchi(inchi):
+            self.cpd_name = cpd_name
+            self._rdkmol_to_kcf()
+        else:
+            return False
 
         return True
 
@@ -127,9 +136,11 @@ class KCFvec(Compound):
         """
         smiles形式を受け取って，rdkitのmol形式に直し，mol形式をmolblockに直し登録する。
         """
-        super().input_smiles(smiles)
-        self.cpd_name = cpd_name
-        self._rdkmol_to_kcf()
+        if super().input_smiles(smiles):
+            self.cpd_name = cpd_name
+            self._rdkmol_to_kcf()
+        else:
+            return False
 
         return True
 
@@ -137,9 +148,11 @@ class KCFvec(Compound):
         """
         rdkitのmol形式を受け取り，mol形式をmolblockに直し登録する。
         """
-        super().input_rdkmol(rdkmol)
-        self.cpd_name = cpd_name
-        self._rdkmol_to_kcf()
+        if super().input_rdkmol(rdkmol):
+            self.cpd_name = cpd_name
+            self._rdkmol_to_kcf()
+        else:
+            return False
 
         return True
 
@@ -947,12 +960,16 @@ class KCFvec(Compound):
         return df
 
     def string2seq(self):
-        ret_list = []
-        for dict2 in self.subs_string:
+        if len(self.string_2_seq) == 0:
             dict1 = dict()
-            for k, v in dict2.items():
-                if v not in dict1.keys():
-                    dict1[v] = []
-                dict1[v].append(k)
-            ret_list.append(dict1)
-        return ret_list
+            for string_dicts in [self.subs_string, self.ring_string]:
+                for dict2 in self.subs_string:
+                    #dict1 = dict()
+                    for k, v in dict2.items():
+                        if v not in dict1.keys():
+                            dict1[v] = []
+                        if k not in dict1[v]:
+                            dict1[v].append(k)
+                    #ret_list.append(dict1)
+            self.string_2_seq = dict1
+        return self.string_2_seq #ret_list

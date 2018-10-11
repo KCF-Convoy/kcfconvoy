@@ -9,7 +9,8 @@ import matplotlib.pyplot as plt
 import networkx as nx
 from rdkit import Chem
 from rdkit.Chem import AllChem, Draw
-
+from rdkit.Chem.Draw import rdMolDraw2D
+from IPython.display import SVG
 
 class Compound:
     """
@@ -130,12 +131,11 @@ class Compound:
             os.mkdir("./" + kegg_dir)
         if not os.path.isfile("./{}/{}.mol".format(kegg_dir, cid)):
             url = "http://www.genome.jp/dbget-bin/www_bget?-f+m+{}".format(cid)
+            print("Downloading ", cid)
             urllib.request.urlretrieve(url,
                                        "./{}/{}.mol".format(kegg_dir, cid))
 
-        self.input_molfile("./{}/{}.mol".format(kegg_dir, cid))
-
-        return True
+        return self.input_molfile("./{}/{}.mol".format(kegg_dir, cid))
 
     def input_from_knapsack(self, cid):
         """
@@ -170,7 +170,8 @@ class Compound:
         with open(molfile, "r") as f:
             molblock = f.read()
 
-        self._input_molblock(molblock)
+        if not self._input_molblock(molblock):
+            return False
         self.mol = Chem.MolFromMolBlock(molblock)
 
         if self.fit2d is False:
@@ -227,7 +228,10 @@ class Compound:
         """
         l_molblock = molblock.split("\n")
         # The third column (0-indexed)
-        line = l_molblock[3]
+        try:
+            line = l_molblock[3]
+        except:
+            return False
         self.n_atoms, self.n_bonds = \
             map(int, [line[:3].strip(), line[3:6].strip()])
         self.head = l_molblock[3]
@@ -315,7 +319,8 @@ class Compound:
 
         return l_coordinates
 
-    def draw_cpd(self, image_file="mol.png"):
+    def draw_cpd(self, image_file="mol.svg", height=300, width=500, highlightAtoms=[], highlightAtomColors={},
+                  highlightAtomRadii={}):
         """
         depicts the compound and saves it as image_file in the working directory.
         If the 2D coordinates are not calculated yet, this method calls self._compute_2d_coords().
@@ -323,34 +328,73 @@ class Compound:
         if not self.fit2d:
             self._compute_2d_coords()
 
-        Draw.MolToFile(self.mol, image_file)
+        #Draw.MolToFile(self.mol, image_file)
+        view = rdMolDraw2D.MolDraw2DSVG(height,width)
+        tm = rdMolDraw2D.PrepareMolForDrawing(self.mol)
+        view.SetFontSize(0.9*view.FontSize())
+        option = view.drawOptions()
+        #option.atomLabels[6] = 'N1'
+        #option.atomLabels[8] = 'N2'
+        #option.multipleBondOffset=0.07
+        #option.padding=0.11
+        #option.legendFontSize=20
+        view.DrawMolecule(tm, highlightAtoms=highlightAtoms, highlightAtomColors=highlightAtomColors,
+                  highlightAtomRadii=highlightAtomRadii)
+        view.FinishDrawing()
+        svg = view.GetDrawingText()
+        with open(image_file, 'w') as f:
+            f.write(svg)
+        return SVG(svg.replace('svg:', ''))
 
-        return True
-
-    def draw_cpd_with_labels(self, start=0, custom_label=None):
+    def draw_cpd_with_labels(self, image_file="mol.svg", height=300, width=500, highlightAtoms=[], highlightAtomColors={},
+                  highlightAtomRadii={}, start=0, custom_label=None):
         """
         depicts the compound with node labels and saves it as image_file in the working directory.
         If the 2D coordinates are not calculated yet, this method calls self._compute_2d_coords().
         """
         if not self.fit2d:
             self._compute_2d_coords()
-
-        pos = self._get_coordinates()
-        node_color = self._get_node_colors()
+            
         if custom_label is None:
             node_label = self._get_node_labels(start)
         else:
             node_label = custom_label
-        edge_labels = dict()
-        for edge in self.graph.edges(data=True):
-            edge_labels[(edge[0], edge[1])] = edge[2]["index"]
-        nx.draw_networkx(self.graph, pos, node_color=node_color, alpha=0.4)
-        nx.draw_networkx_labels(self.graph, pos, fontsize=6, labels=node_label)
-        nx.draw_networkx_edge_labels(self.graph, pos, edge_labels=edge_labels,
-                                     fontsize=3, font_color="b")
-        plt.draw()
 
-        return True
+        view = rdMolDraw2D.MolDraw2DSVG(height,width)
+        tm = rdMolDraw2D.PrepareMolForDrawing(self.mol)
+        view.SetFontSize(0.9*view.FontSize())
+        option = view.drawOptions()
+        for k, v in sorted(node_label.items()):
+            option.atomLabels[k] = v
+        #option.atomLabels[6] = 'N1'
+        #option.atomLabels[8] = 'N2'
+        #option.multipleBondOffset=0.07
+        #option.padding=0.11
+        #option.legendFontSize=20
+        view.DrawMolecule(tm, highlightAtoms=highlightAtoms, highlightAtomColors=highlightAtomColors,
+                  highlightAtomRadii=highlightAtomRadii)
+        view.FinishDrawing()
+        svg = view.GetDrawingText()
+        with open(image_file, 'w') as f:
+            f.write(svg)
+        return SVG(svg.replace('svg:', ''))
+
+        #pos = self._get_coordinates()
+        #node_color = self._get_node_colors()
+        #if custom_label is None:
+        #    node_label = self._get_node_labels(start)
+        #else:
+        #    node_label = custom_label
+        #edge_labels = dict()
+        #for edge in self.graph.edges(data=True):
+        #    edge_labels[(edge[0], edge[1])] = edge[2]["index"]
+        #nx.draw_networkx(self.graph, pos, node_color=node_color, alpha=0.4)
+        #nx.draw_networkx_labels(self.graph, pos, fontsize=6, labels=node_label)
+        #nx.draw_networkx_edge_labels(self.graph, pos, edge_labels=edge_labels,
+        #                             fontsize=3, font_color="b")
+        #plt.draw()
+
+        #return True
 
     def _get_node_colors(self):
         """
