@@ -58,8 +58,8 @@ $ python setup.py install
 ### Using Wheel Package
 
 ```bash
-$ wget (TODO wheel url)
-$ pip install (TODO wheel file name)
+$ wget https://github.com/KCF-Convoy/kcfconvoy/releases/download/v0.0.4/kcfconvoy-0.0.4-py3-none-any.whl
+$ pip install kcfconvoy-0.0.4-py3-none-any.whl
 ```
 
 ## Test

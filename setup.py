@@ -9,10 +9,10 @@ def main():
     setup(
         name="kcfconvoy",
         version="0.0.4",
-        url="https://github.com/KCF-Convoy",
+        url="https://github.com/KCF-Convoy/kcfconvoy",
         author="maskot1977",
-        author_email="maskot1977@gmail.com",
-        description="KCF convoy: requires rdkit installed in advance",
+        author_email="maskot@chemsys.t.u-tokyo.ac.jp",
+        description="KCF-Convoy: efficient Python package to convert KCF chemical substructure fingerprints",
         license="MIT",
         keywords="bio-Informatics kcf kcfconvoy smiles",
         classifiers=[
