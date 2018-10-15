@@ -109,8 +109,8 @@ class Library:
         try:
             inchis = Chem.MolToInchi(cpd.mol)
         except:
-            print("error ", name)
-            return False    # TODO error 処理
+            #print("error ", name)
+            return False
 
         self.inchis.append(inchis)
         self.cpds.append(cpd)

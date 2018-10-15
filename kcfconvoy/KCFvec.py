@@ -74,7 +74,7 @@ class KCFvec(Compound):
         self.kcf_vec = defaultdict(dict)
         self.ring_string = []
         self.subs_string = []
-        self.string_2_seq = {}
+        self._string_2_seq = {}
 
     def input_from_kegg(self, cid, cpd_name="NoName"):
         """
@@ -959,8 +959,8 @@ class KCFvec(Compound):
                           columns=columns)
         return df
 
-    def string2seq(self):
-        if len(self.string_2_seq) == 0:
+    def string2seq(self, kcfstring):
+        if len(self._string_2_seq) == 0:
             dict1 = dict()
             for string_dicts in [self.subs_string, self.ring_string]:
                 for dict2 in self.subs_string:
@@ -971,5 +971,17 @@ class KCFvec(Compound):
                         if k not in dict1[v]:
                             dict1[v].append(k)
                     #ret_list.append(dict1)
-            self.string_2_seq = dict1
-        return self.string_2_seq #ret_list
+            self._string_2_seq = dict1
+        if kcfstring in self._string_2_seq.keys():
+            return self._string_2_seq[kcfstring]
+        else:
+            return []
+    
+    def draw_cpd_with_highlighted_substructure(self, subs_string="C-C-C-C", image_file="mol.svg", height=300, width=500, 
+                                               highlightAtoms=[], highlightAtomColors={}, highlightAtomRadii={}, start=0, custom_label=None):
+        highlightAtoms = list(set([int(atom_idx) for atom_idx in ",".join(self.string2seq(subs_string)).split(",")]))
+        return self.draw_cpd_with_labels(image_file = image_file, height=height, width=width, highlightAtoms=highlightAtoms, \
+                                  highlightAtomColors=highlightAtomColors, highlightAtomRadii=highlightAtomRadii, start=start, custom_label=custom_label)
+
+
+
