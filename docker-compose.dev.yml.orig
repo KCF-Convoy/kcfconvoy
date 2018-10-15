@@ -9,8 +9,13 @@ services:
     ports:
       - 8888:8888
     environment:
-      - TZ=Asia/Tokyo
+<<<<<<< HEAD
+      TZ: Asia/Tokyo
       - PYTHONPATH=/opt/kcfconvoy
+=======
+      PYTHONPATH: /opt/kcfconvoy
+      TZ: Asia/Tokyo
+>>>>>>> feature/issue_#2,7
     tty: true
     volumes:
       - .:/opt/kcfconvoy/

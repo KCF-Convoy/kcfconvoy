@@ -4,5 +4,5 @@ KCF-Convoy is a new Python package to generate KCF formats and KCF-S fingerprint
 Visit [GitHub Wiki](https://github.com/KCF-Convoy/kcfconvoy/wiki) for more details.
 
 ## Contact
-Author: maskot@bio.titech.ac.jp
+Author: maskot@chemsys.t.u-tokyo.ac.jp
 Maintainer: suecharo@g.ecc.u-tokyo.ac.jp

@@ -1,5 +1,5 @@
 FROM ubuntu:16.04
-MAINTAINER suecharo suecharo@g.ecc.u-tokyo.ac.jp
+LABEL maintainer="suecharo suecharo@g.ecc.u-tokyo.ac.jp"
 
 ENV LANG=C.UTF-8 LC_ALL=C.UTF-8
 RUN apt update \
@@ -26,11 +26,7 @@ RUN curl -L https://repo.anaconda.com/miniconda/Miniconda3-4.5.4-Linux-x86_64.sh
  && echo ". /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc \
  && echo "conda activate kcfconvoy" >> ~/.bashrc
 
-COPY setup.py /opt/kcfconvoy/
-COPY requirements.txt /opt/kcfconvoy/
-COPY kcfconvoy /opt/kcfconvoy/kcfconvoy/
-COPY tests /opt/kcfconvoy/tests/
-COPY jupyter_usecase /opt/kcfconvoy/jupyter_usecase/
+COPY ./* /opt/kcfconvoy/
 
 RUN  . /opt/conda/etc/profile.d/conda.sh \
  && conda activate kcfconvoy \

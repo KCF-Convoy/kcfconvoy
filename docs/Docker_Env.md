@@ -65,5 +65,16 @@ $ docker run -it -p 8888:8888 --name kcfconvoy kcfconvoy:latest bash
 $ git pull git@github.com:KCF-Convoy/kcfconvoy.git
 $ cd kcfconvoy
 $ docker-compose -f docker-compose.dev.yml up -d --build
-$ docker-compose exec kcfconvoy bash
+$ docker-compose -f docker-compose.dev.yml exec kcfconvoy bash
+```
+
+## Jupyter notebook
+- How to start jupyter in docker container
+    - Execute the following command
+    - In local browser, use Token to access `localhost:8888`
+
+```
+$ docker-compose -f docker-compose.dev.yml up -d --build
+$ docker-compose -f docker-compose.dev.yml exec kcfconvoy bash
+$ jupyter notebook --ip='0.0.0.0' --allow-root
 ```

@@ -108,5 +108,6 @@ tests/kegg
 tests/knapsack
 
 jupyter_usecase/*.png
+jupyter_usecase/*.svg
 jupyter_usecase/kegg
 jupyter_usecase/knapsack

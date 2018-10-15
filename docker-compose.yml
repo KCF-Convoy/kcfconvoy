@@ -8,5 +8,9 @@ services:
     container_name: kcfconvoy
     ports:
       - 8888:8888
+    environment:
+      TZ: Asia/Tokyo
     tty: true
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
     command: ["tail", "-f", "/dev/null"]

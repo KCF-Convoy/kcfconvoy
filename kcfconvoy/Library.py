@@ -66,7 +66,7 @@ class Library:
         self.names = []
         self.fps = []
 
-    def calc_fingerprints(self, fingerprint="PatternFingerprint"):
+    def calc_fingerprints(self, fingerprint="MorganFingerprint"):
         """
         fingerprint を計算する。
 
@@ -79,6 +79,7 @@ class Library:
 
         http://cheminformist.itmol.com/TEST/wp-content/uploads/2015/08/FpScreening_a.html
         """
+        self.fps = []
         for cpd in self.cpds:
             if fingerprint == "PatternFingerprint":
                 fp = Chem.PatternFingerprint(cpd.mol, fpSize=1024)
@@ -108,7 +109,8 @@ class Library:
         try:
             inchis = Chem.MolToInchi(cpd.mol)
         except:
-            return False    # TODO error 処理
+            #print("error ", name)
+            return False
 
         self.inchis.append(inchis)
         self.cpds.append(cpd)
@@ -124,9 +126,10 @@ class Library:
         """
         cpd = Compound()
         cpd.input_from_kegg(cid)
-        self._append_cpd(cpd, name)
-
-        return True
+        if self._append_cpd(cpd, name):
+            return True
+        else:
+            return False
 
     def input_from_knapsack(self, cid, name=None):
         """
@@ -135,9 +138,10 @@ class Library:
         """
         cpd = Compound()
         cpd.input_from_knapsack(cid)
-        self._append_cpd(cpd, name)
-
-        return True
+        if self._append_cpd(cpd, name):
+            return True
+        else:
+            return False
 
     def input_molfile(self, molfile, name=None):
         """
@@ -145,9 +149,10 @@ class Library:
         """
         cpd = Compound()
         cpd.input_molfile(molfile)
-        self._append_cpd(cpd, name)
-
-        return True
+        if self._append_cpd(cpd, name):
+            return True
+        else:
+            return False
 
     def input_inchi(self, inchi, name=None):
         """
@@ -155,9 +160,10 @@ class Library:
         """
         cpd = Compound()
         cpd.input_inchi(inchi)
-        self._append_cpd(cpd, name)
-
-        return True
+        if self._append_cpd(cpd, name):
+            return True
+        else:
+            return False
 
     def input_smiles(self, smiles, name=None):
         """
@@ -165,9 +171,10 @@ class Library:
         """
         cpd = Compound()
         cpd.input_smiles(smiles)
-        self._append_cpd(cpd, name)
-
-        return True
+        if self._append_cpd(cpd, name):
+            return True
+        else:
+            return True
 
     def input_rdkmol(self, mol, name=None):
         """
