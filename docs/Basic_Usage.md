@@ -144,7 +144,7 @@ print(kcfvec_1.subs_string) #  The strings that represent the other substructure
 kcfvec_1.draw_cpd(image_file="mol_1.svg")
 ```
 
-![svg](basic_usage_files/basic_usage_13_0.svg)
+![png](https://github.com/KCF-Convoy/kcfconvoy/raw/develop/docs/basic_usage_files/basic_usage_13_0.png)
 
 ```python
 atom_label = {key: value["kegg_atom"] for key, value in kcfvec_1.kegg_atom_label.items()}
@@ -154,7 +154,7 @@ kcfvec_1.draw_cpd_with_labels(custom_label=atom_label)
 
     {0: 'O1a', 1: 'C8y', 2: 'C8x', 3: 'N5x', 4: 'C8y', 5: 'C1b', 6: 'O1a', 7: 'C8x', 8: 'C8x'}
 
-![svg](basic_usage_files/basic_usage_14_1.svg)
+![png](https://github.com/KCF-Convoy/kcfconvoy/raw/develop/docs/basic_usage_files/basic_usage_14_1.png)
 
 ```python
 atoms = [2, 4, 5]
@@ -163,13 +163,13 @@ radius = {2: 0.5, 5: 0.4}
 kcfvec_1.draw_cpd(image_file="mol_1.svg", highlightAtoms=atoms, highlightAtomColors=colors, highlightAtomRadii=radius)
 ```
 
-![svg](basic_usage_files/basic_usage_15_0.svg)
+![png](https://github.com/KCF-Convoy/kcfconvoy/raw/develop/docs/basic_usage_files/basic_usage_15_0.png)
 
 ```python
 kcfvec_2.draw_cpd(image_file="mol_3.svg")
 ```
 
-![svg](basic_usage_files/basic_usage_16_0.svg)
+![png](https://github.com/KCF-Convoy/kcfconvoy/raw/develop/docs/basic_usage_files/basic_usage_16_0.png)
 
 ```python
 atom_labe2 = {key: value["kegg_atom"] for key, value in kcfvec_2.kegg_atom_label.items()}
@@ -179,7 +179,7 @@ kcfvec_2.draw_cpd_with_labels(custom_label=atom_label)
 
     {0: 'O1a', 1: 'C8y', 2: 'C8x', 3: 'N5x', 4: 'C8y', 5: 'C1b', 6: 'O1a', 7: 'C8x', 8: 'C8x'}
 
-![svg](basic_usage_files/basic_usage_17_1.svg)
+![png](https://github.com/KCF-Convoy/kcfconvoy/raw/develop/docs/basic_usage_files/basic_usage_17_1.png)
 
 ```python
 kcfvec_2.string2seq('C1y-C1b-O2b')
@@ -192,7 +192,7 @@ atom_label = {key: value["kegg_atom"] for key, value in kcfvec_2.kegg_atom_label
 kcfvec_2.draw_cpd_with_highlighted_substructure(subs_string='C1y-C1b-O2b', custom_label=atom_label)
 ```
 
-![svg](basic_usage_files/basic_usage_19_0.svg)
+![png](https://github.com/KCF-Convoy/kcfconvoy/raw/develop/docs/basic_usage_files/basic_usage_19_0.png)
 
 ### Other methods
 
@@ -482,13 +482,14 @@ img = Draw.MolsToGridImage( mols, molsPerRow=3, useSVG=True, legends=kcfmat.name
 img
 ```
 
-![svg](basic_usage_files/basic_usage_31_0.svg)
+![png](https://github.com/KCF-Convoy/kcfconvoy/raw/develop/docs/basic_usage_files/basic_usage_31_0.png)
+
 
 ```python
 kcfmat.draw_cpds()
 ```
 
-![svg](basic_usage_files/basic_usage_32_0.svg)
+![png](https://github.com/KCF-Convoy/kcfconvoy/raw/develop/docs/basic_usage_files/basic_usage_32_0.png)
 
 - When the users input the compounds into KCFmat, the following member variables are calculated automatically.
   - `inchis`
@@ -598,13 +599,13 @@ kcfmat.mat[:,4]
 kcfmat.draw_cpds(kcfstringidx=4)
 ```
 
-![svg](basic_usage_files/basic_usage_48_0.svg)
+![png](https://github.com/KCF-Convoy/kcfconvoy/raw/develop/docs/basic_usage_files/basic_usage_48_0.png)
 
 ```python
 kcfmat.draw_cpds(kcfstring='C5a-C8y-C8x-C8x-C8x-N5y')
 ```
 
-![svg](basic_usage_files/basic_usage_49_0.svg)
+![png](https://github.com/KCF-Convoy/kcfconvoy/raw/develop/docs/basic_usage_files/basic_usage_49_0.png)
 
 ### Similarity measures between two KCF vectors
 

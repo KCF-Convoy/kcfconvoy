@@ -1,4 +1,4 @@
-version: "4"
+version: "3"
 services:
   kcfconvoy:
     image: kcfconvoy-dev
@@ -14,5 +14,4 @@ services:
     tty: true
     volumes:
       - .:/opt/kcfconvoy/
-      - /etc/localtime:/etc/localtime:ro
     command: ["tail", "-f", "/dev/null"]
