@@ -4,6 +4,8 @@ from setuptools import setup
 with open("requirements.txt") as f:
     requirements = f.read().splitlines()
 
+with open("README.rst") as f:
+    long_desc = f.read()
 
 def main():
     setup(
@@ -13,6 +15,7 @@ def main():
         author="maskot1977",
         author_email="maskot@chemsys.t.u-tokyo.ac.jp",
         description="KCF-Convoy: efficient Python package to convert KCF chemical substructure fingerprints",
+        long_description=long_desc,
         license="MIT",
         keywords="bio-Informatics kcf kcfconvoy smiles",
         classifiers=[
