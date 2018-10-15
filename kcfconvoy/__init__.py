@@ -1,5 +1,7 @@
-#!/usr/bin/env python
 # coding: utf-8
-__author__ = 'maskot1977'
-__version__ = '0.0.3'
-__license__ = 'MIT'
+from .Compound import Compound
+from .KCFvec import KCFvec
+from .KCFmat import KCFmat
+from .Library import Library
+from .util import similarity
+from .util import Classifiers

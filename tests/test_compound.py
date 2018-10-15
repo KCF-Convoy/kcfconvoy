@@ -1,8 +1,11 @@
-import unittest
-from kcfconvoy.Compound import Compound
+# coding: utf-8
 import os
-from rdkit import Chem
 import shutil
+import unittest
+
+from rdkit import Chem
+
+from kcfconvoy import Compound
 
 MOLBLOCK = (
     " \n"
@@ -37,9 +40,10 @@ class TestCompound(unittest.TestCase):
     kcfconvoyのCompoundのテスト
     """
 
-    @classmethod
-    def setUpClass(cls):
-        with open(PATH, "w")as f:
+    def setUp(self):
+        shutil.rmtree("./knapsack", ignore_errors=True)
+        shutil.rmtree("./kegg", ignore_errors=True)
+        with open(PATH, "w") as f:
             f.write(MOLBLOCK)
 
     def test_input_from_kegg(self):
@@ -47,17 +51,16 @@ class TestCompound(unittest.TestCase):
         input_from_keggのテスト
         内部でinput_molfileを使用
         """
-        shutil.rmtree("./kegg")
         cid = "C00002"
         expected = [(0, 1), (0, 2), (0, 3), (1, 4), (1, 5), (2, 6), (2, 7),
-                    (3, 8), (4, 8), (4, 9), (5, 10), (6, 11), (7, 12), (7, 13),
+                    (3, 8), (4, 9), (4, 8), (5, 10), (6, 11), (7, 12), (7, 13),
                     (9, 14), (9, 15), (10, 14), (11, 16), (11, 12), (12, 17),
                     (16, 18), (18, 19), (19, 20), (19, 21), (19, 22), (20, 23),
                     (23, 24), (23, 25), (23, 26), (24, 27), (27, 28), (27, 29),
                     (27, 30)]
         c = Compound()
         c.input_from_kegg(cid)
-        actual = c.graph.edges()
+        actual = list(c.graph.edges())
         self.assertEqual(actual, expected)
 
     def test_input_from_knapsack(self):
@@ -65,13 +68,12 @@ class TestCompound(unittest.TestCase):
         input_from_knapsackのテスト
         内部でinput_molfileを使用
         """
-        shutil.rmtree("./knapsack")
         cid = "C00037855"
         expected = [(0, 1), (0, 5), (0, 6), (1, 2), (2, 3), (3, 4), (4, 5),
                     (6, 7)]
         c = Compound()
         c.input_from_knapsack(cid)
-        actual = c.graph.edges()
+        actual = list(c.graph.edges())
         self.assertEqual(actual, expected)
 
     def test_input_molfile(self):
@@ -82,7 +84,7 @@ class TestCompound(unittest.TestCase):
                     (5, 7), (7, 8)]
         c = Compound()
         c.input_molfile(PATH)
-        actual = c.graph.edges()
+        actual = list(c.graph.edges())
         self.assertEqual(actual, expected)
 
     def test_input_inchi(self):
@@ -92,11 +94,11 @@ class TestCompound(unittest.TestCase):
         """
         inchi = ("InChI=1S/C6H8O6/c7-1-2(8)5-3(9)4(10)6(11)12-5/h2,"
                  "5,7-8,10-11H,1H2/t2-,5+/m0/s1")
-        expected = [(0, 1), (0, 6), (1, 4), (1, 7), (2, 8), (2, 3), (2, 4),
-                    (3, 9), (3, 5), (4, 11), (5, 11), (5, 10)]
+        expected = [(0, 1), (0, 6), (1, 4), (1, 7), (2, 3), (2, 4), (2, 8),
+                    (3, 5), (3, 9), (4, 11), (5, 10), (5, 11)]
         c = Compound()
         c.input_inchi(inchi)
-        actual = c.graph.edges()
+        actual = list(c.graph.edges())
         self.assertEqual(actual, expected)
 
     def test_input_smiles(self):
@@ -105,11 +107,11 @@ class TestCompound(unittest.TestCase):
         内部でinput_rdkmolを使用
         """
         smiles = 'O=Cc1ccc(O)cc1'
-        expected = [(0, 1), (1, 2), (2, 8), (2, 3), (3, 4), (4, 5), (5, 6),
+        expected = [(0, 1), (1, 2), (2, 3), (2, 8), (3, 4), (4, 5), (5, 6),
                     (5, 7), (7, 8)]
         c = Compound()
         c.input_smiles(smiles)
-        actual = c.graph.edges()
+        actual = list(c.graph.edges())
         self.assertEqual(actual, expected)
 
     def test_input_rdkmol(self):
@@ -121,7 +123,7 @@ class TestCompound(unittest.TestCase):
                     (5, 7), (7, 8)]
         c = Compound()
         c.input_rdkmol(rdkmol)
-        actual = c.graph.edges()
+        actual = list(c.graph.edges())
         self.assertEqual(actual, expected)
 
     def test_draw_cpd(self):
@@ -147,21 +149,23 @@ class TestCompound(unittest.TestCase):
         """
         find_seqのテスト
         """
-        expected = [[0, 1, 0], [0, 2, 0], [0, 3, 0], [0, 1, 4], [0, 2, 5],
-                    [0, 3, 6], [0, 1, 4, 7], [0, 2, 5, 7], [1, 0, 1],
-                    [1, 4, 1], [1, 0, 2], [1, 0, 3], [1, 0, 2, 5],
-                    [1, 4, 7, 5], [1, 0, 3, 6], [1, 4, 7], [1, 4, 7, 8],
-                    [2, 0, 1], [2, 0, 2], [2, 5, 2], [2, 0, 3], [2, 0, 1, 4],
-                    [2, 5, 7, 4], [2, 0, 3, 6], [2, 5, 7], [2, 5, 7, 8],
-                    [3, 0, 1], [3, 0, 2], [3, 0, 3], [3, 6, 3], [3, 0, 1, 4],
-                    [3, 0, 2, 5], [4, 1, 0], [4, 1, 0, 2], [4, 7, 5, 2],
-                    [4, 1, 0, 3], [4, 1, 4], [4, 7, 4], [4, 7, 5], [4, 7, 8],
-                    [5, 2, 0], [5, 2, 0, 1], [5, 7, 4, 1], [5, 2, 0, 3],
-                    [5, 7, 4], [5, 2, 5], [5, 7, 5], [5, 7, 8], [6, 3, 0],
-                    [6, 3, 0, 1], [6, 3, 0, 2], [6, 3, 6], [7, 4, 1, 0],
-                    [7, 5, 2, 0], [7, 4, 1], [7, 5, 2], [7, 8, 7], [7, 4, 7],
-                    [7, 5, 7], [8, 7, 4, 1], [8, 7, 5, 2], [8, 7, 4],
-                    [8, 7, 5], [8, 7, 8]]
+        expected = [[0, 1, 4], [0, 2, 5], [0, 3, 6], [0, 1, 4, 7],
+                    [0, 2, 5, 7], [1, 0, 2], [1, 0, 3], [
+                        1, 0, 2, 5], [1, 4, 7, 5],
+                    [1, 0, 3, 6], [1, 4, 7], [1, 4, 7, 8], [2, 0, 1], [2, 0, 3],
+                    [2, 0, 1, 4], [2, 5, 7, 4], [
+                        2, 0, 3, 6], [2, 5, 7], [2, 5, 7, 8],
+                    [3, 0, 1], [3, 0, 2], [3, 0, 1, 4], [3, 0, 2, 5], [4, 1, 0],
+                    [4, 1, 0, 2], [4, 7, 5, 2], [
+                        4, 1, 0, 3], [4, 7, 5], [4, 7, 8],
+                    [5, 2, 0], [5, 2, 0, 1], [5, 7, 4, 1], [
+                        5, 2, 0, 3], [5, 7, 4],
+                    [5, 7, 8], [6, 3, 0], [6, 3, 0, 1], [
+                        6, 3, 0, 2], [7, 4, 1, 0],
+                    [7, 5, 2, 0], [7, 4, 1], [7, 5, 2], [
+                        8, 7, 4, 1], [8, 7, 5, 2],
+                    [8, 7, 4], [8, 7, 5]]
+
         c = Compound()
         c.input_molfile(PATH)
         actual = [i for i in c.find_seq(4)]
@@ -208,15 +212,16 @@ class TestCompound(unittest.TestCase):
         """
         rdkmol = Chem.MolFromMolBlock(MOLBLOCK)
         expected = [(0, [1, 2, 3]), (1, [0, 4]), (2, [0, 5]), (3, [0, 6]),
-                    (4, [1, 7]), (5, [2, 7]), (6, [3]), (7, [8, 4, 5]),
+                    (4, [1, 7]), (5, [2, 7]), (6, [3]), (7, [4, 8, 5]),
                     (8, [7])]
         c = Compound()
         c.input_rdkmol(rdkmol)
         actual = c.get_vicinities()
         self.assertEqual(actual, expected)
 
-    @classmethod
-    def tearDownClass(cls):
+    def tearDown(self):
+        shutil.rmtree("./knapsack", ignore_errors=True)
+        shutil.rmtree("./kegg", ignore_errors=True)
         os.remove(PATH)
 
 

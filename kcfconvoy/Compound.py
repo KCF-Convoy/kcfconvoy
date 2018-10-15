@@ -1,4 +1,3 @@
-#!/bin/env python
 # coding: utf-8
 
 import os
@@ -10,7 +9,8 @@ import matplotlib.pyplot as plt
 import networkx as nx
 from rdkit import Chem
 from rdkit.Chem import AllChem, Draw
-
+from rdkit.Chem.Draw import rdMolDraw2D
+from IPython.display import SVG
 
 class Compound:
     """
@@ -32,82 +32,84 @@ class Compound:
     """
     method
         - input_from_kegg
-            KEGG_IDからobjectを生成する。
+            generates a compound using KEGG compound ID. See https://www.kegg.jp
             - input:
                 kegg_id
         - input_from_knapsack
-            knapsackからobjectを生成する。
+            generates a compound using KNApSAcK compound ID. See http://kanaya.naist.jp/KNApSAcK/
             - input:
                 knapsack_id
         - input_molfile
-            molfileのpathからobjectを生成する。
+            generates a compound from a molfile specified by molfile_path
             - input:
                 molfile_path
         - input_inchi
-            inchi形式からobjectを生成する。
+            generates a compound from a InChI string.
             - input:
                 inchi
         - input_smiles
-            smiles形式からobjectを生成する。
+            generates a compound from a SMILES string.
             - input:
                 smiles
         - input_rdkmol
-            rdkitのmol形式からobjectを生成する。
+            generates a compound from an RDK mol object.
             - input:
                 rdk_mol
         - draw_cpd
-            実行ディレクトリにpng_file_name.pngで生成する。rdkitのmethodで描画している。
+            depicts the compound as png_file_name.png in the working directory using RDKit.
             - input:
                 png_file_name
         - draw_cpd_with_labels
-            label付けをするdraw method。labelのstartや，custom_labelを指定できる。
+            depicts the compound with atom labelings. The users can also specify the start labels or customize the labels.
         - find_seq
-            self.graph以下に含まれるグラフ構造のうち，length 以下の部分構造をイテレーターとして返す。
-            length, bidirectonal の pram を持つ。
-            - input:
-                nodeのlabelのlist。
+            an iterator that yields the substructures (the sequence of atoms) with the length equals or shorter than specified.
+            To parameters: length, and bidirectonal (optional).
+            - output:
+                list of the atom IDs.
         - has_bond
-            atom_1 と atom_2 の間にedgeがあるか bool で返す。
+            returns a bool value representing whether or not the compound has a chemical bond between atom_1 and atom_2.
             - input:
                 atom_1
                 atom_2
         - get_symbol
-            atom の index を受け取って，atomのsymbol を返す。
+            returns the symbol of the atomic element specified by the atom ID.
             - input:
                 atom_index
         - get_triplets
-            3連続の結合を全て取り出す。
+            returns the substructures that consists of three atoms
         - get_vicinities
-            隣接している atom のindexを返す。
+            returns the substructures that consists of a center atom and all the attaching atoms.
 
-    内部 method:
+    internal (hidden) method:
         - _input_molblock
-            input系のmethodから呼ばれ，実際にself.graphなどを生成する。
+            is called by input_* methods and generates self.graph.
         - _compute_2d_coords
-            2Dの座標が生成されていない場合は生成する。self._set_coordinates()も呼ぶ。
+            is called when the compound does not have any 2D coordinates and generates 2D coordinates and call self._set_coordinates().
         - self._set_coordinates
-            2Dの座標をself.graph.nodesに登録する。
+            sets the 2D coordinates to self.graph.nodes
         - self._get_coordinates
-            2Dの座標を得る。
+            returns the 2D coordinates
         - _get_node_colors
-            draw_cpd_with_labels の内部メソッド
+            is called by draw_cpd_with_labels to determine the node colors.
         - _get_node_labels
-            draw_cpd_with_labels の内部メソッド
+            is called by draw_cpd_with_labels to label the nodes.
     """
 
     def __init__(self):
         """
-        self.heads : molblock形式の3行目(0-indexed)
+        self.heads : The third row in the Molfile format (0-indexed)
             ex.)   4  4  0  0  0  0  0  0  0  0999 V2000
-        self.tail : molblock形式の最後らへんの行
-        self.n_atoms : graphに含まれるatomの数
-        self.n_bonds : graphに含まれるedgeの数
-        self.fit2d : 2Dが計算されているかどうか，されている場合，self.graph[node]["row"]
-            の最初の項目などに座標情報が入っている。
-        self.graph : グラフ構造をもつ。
-            node のメタデータとして，["symbol", "row"]
-            edge のメタデータとして，["order", "index", "row"]
-        self.mol : rdkitのmol形式として登録されている。
+        self.n_atoms : The number of atoms defined in the atom block in Molfile, 
+            which is contained in self.graph
+        self.n_bonds : The number of bonds defined in the bond block in Molfile, 
+            which is contained in self.graph
+        self.tail : The rows after the bond block in the Molfile format
+        self.fit2d : True if 2D corrdinates are already calculated, otherwize False.
+            2D coordinates are described in self.graph[node]["row"]
+        self.graph : molecular graph structure by NetworkX
+            a node represents an atom and has metadata ["symbol", "row"]
+            an edge represents a bond and has metadata ["order", "index", "row"]
+        self.mol : RDK mol calculated by RDKit
         """
         self.heads = None
         self.tails = []
@@ -119,28 +121,29 @@ class Compound:
 
     def input_from_kegg(self, cid):
         """
-        e.g., cid = C00002
-        KEGG_IDからmol形式でdownloadし，./kegg/cid.molとして保存する。
-        self.input_molfileを呼ぶ。
+        e.g., cid = "C00002"
+        This method downloads a Molfile specified by cid (KEGG Compound ID) from KEGG database,
+        save it as ./kegg/cid.mol, and calls self.input_molfile to generate a Compound object.
+        If ./kegg/cid.mol already exists, this method does not download the same file again.
         """
         kegg_dir = "kegg"
         if not os.path.isdir("./" + kegg_dir):
             os.mkdir("./" + kegg_dir)
         if not os.path.isfile("./{}/{}.mol".format(kegg_dir, cid)):
             url = "http://www.genome.jp/dbget-bin/www_bget?-f+m+{}".format(cid)
+            print("Downloading ", cid)
             urllib.request.urlretrieve(url,
                                        "./{}/{}.mol".format(kegg_dir, cid))
 
-        self.input_molfile("./{}/{}.mol".format(kegg_dir, cid))
-
-        return True
+        return self.input_molfile("./{}/{}.mol".format(kegg_dir, cid))
 
     def input_from_knapsack(self, cid):
         """
-        e.g., cid = C00002657
-        knapsack_IDからmol形式でdownloadし，./knapsack/cid.molとして保存する。
-        self.input_molfileを呼ぶ。
-        knapsack3dのmolファイルは3d座標が入っているため座標は再計算させる。
+        e.g., cid = "C00002657"
+        This method downloads a Molfile specified by cid (KNApSAcK ID) from KNApSAcK 3D database,
+        save it as ./knapsack/cid.mol, and calls self.input_molfile to generate a Compound object.
+        If ./knapsack/cid.mol already exists, this method does not download the same file again.
+        The molfile from KNApSAcK contains 3D coordinates, so the 2D coordinates are recalculated. 
         """
         knapsack_dir = "knapsack"
         if not os.path.isdir("./" + knapsack_dir):
@@ -159,15 +162,16 @@ class Compound:
 
     def input_molfile(self, molfile):
         """
-        molfileの実体ではなく，molfileのpathを受け取る。
-        molfileの中身自体はmolblock。
-        self._input_molblockをすることで，諸々の情報をselfに持たせる。
-        ここで，self._compute_2d_coords()を呼んでおく。
+        This method inputs the path to the Molfile (not the Molfile itself). 
+        The data in the Molfile is referred to as molblock.
+        This method calls self._input_molblock to incorporate varias information into self.
+        If 2D corrdinate is not calculated yet, this method calls self._compute_2d_coords().
         """
         with open(molfile, "r") as f:
             molblock = f.read()
 
-        self._input_molblock(molblock)
+        if not self._input_molblock(molblock):
+            return False
         self.mol = Chem.MolFromMolBlock(molblock)
 
         if self.fit2d is False:
@@ -177,7 +181,8 @@ class Compound:
 
     def input_inchi(self, inchi):
         """
-        inchi形式を受け取って，rdkitのmol形式に直し，mol形式をmolblockに直し登録する。
+        inputs an InChI string to generate an RDKit mol,
+        which is passed to self.input_rdkmol() where a molblock is generated.
         """
         self.input_rdkmol(Chem.MolFromInchi(inchi))
 
@@ -185,15 +190,17 @@ class Compound:
 
     def input_smiles(self, smiles):
         """
-        smiles形式を受け取って，rdkitのmol形式に直し，mol形式をmolblockに直し登録する。
+        inputs a SMILES string to generate an RDKit mol,
+        which is passed to self.input_rdkmol() where a molblock is generated.
         """
         self.input_rdkmol(Chem.MolFromSmiles(smiles))
 
         return True
-
+    
     def input_rdkmol(self, rdkmol):
         """
-        rdkitのmol形式を受け取り，mol形式をmolblockに直し登録する。
+        inputs an RDKit mol and generates a molblock.
+        If 2D corrdinate is not calculated yet, this method calls self._compute_2d_coords().
         """
         self.mol = rdkmol
         self._input_molblock(Chem.MolToMolBlock(rdkmol))
@@ -205,30 +212,32 @@ class Compound:
 
     def _input_molblock(self, molblock):
         """
-        molblockの形式として，
-            0 - 2 行目は必要のない行
-            3 行目はn_atomsとn_edgesが含まれている。self.headとして定義する。
-            (3+1) - (3+1+n_atoms-1) 行目はatomについての情報。
-                ex:) n_atoms=4とすると 4 - 7 行目を指す。
-            (3+1+n_atoms) - (3+1+n_atoms+n_edges-1) 行目はedgeについての情報。
-                ex.) n_atoms=4,n_edges=4とすると 8 - 11 行目を指す。
-            (3+1+n_atoms+n_edges) 行目以降は "CHG" が含まれていない限り，
-            self.tailにappendする。
+        A molblock (the data in Molfile)  has the following format:
+            The first three rows (0, 1, 2) are not used for the description of the chemical structure.
+            The third row (0-indexed) contains n_atoms and n_edges, and is defined as self.head
+            The (3+1)th - (3+1+n_atoms-1)th rows are referred to as the atom block, containing the data about atoms. 
+                ex:) The 4-7 th rows are in the atom block if n_atoms=4
+            The (3+1+n_atoms) - (3+1+n_atoms+n_edges-1)th rows are referred to as the bond block, containing the data about bonds.
+                ex.) The 8 - 11 th rows are in the bond block if n_atoms=4,n_edges=4
+            The (3+1+n_atoms+n_edges)th row and the following rows are appended to self.tail unless the row contains "CHG".
 
-        atomについての行の最初の項目が 0.0 出ない場合，2Dについてがすでに計算されている。
+        The first column of the atom block represents X-coordinates of the atom, 
+        meaning that 2D coordinates are already calculated if it is not 0.0
 
-        molblock の中身の諸々については，self.head, self.tail, self.graph[node]["row"]
-        のいずれかに登録される。
+        Most information obtained from molblock is incorporated into self.head, self.tail, self.graph[node]["row"] etc.
         """
         l_molblock = molblock.split("\n")
-        # 3 行目
-        line = l_molblock[3]
+        # The third column (0-indexed)
+        try:
+            line = l_molblock[3]
+        except:
+            return False
         self.n_atoms, self.n_bonds = \
             map(int, [line[:3].strip(), line[3:6].strip()])
         self.head = l_molblock[3]
 
         index_check_list = []
-        # atom についての行
+        # atom block
         for i in range(4, 4 + self.n_atoms):
             line = l_molblock[i].split()
             if line[12] == "0":
@@ -241,7 +250,7 @@ class Compound:
             self.graph.add_node(
                 len(self.graph.nodes()), symbol=line[3], row=line)
 
-        # edge についての行
+        # bond block
         for i in range(4 + self.n_atoms, 4 + self.n_atoms + self.n_bonds):
             line = l_molblock[i]
             line = list(map(int, [line[:3].strip(), line[3:6].strip(),
@@ -270,10 +279,9 @@ class Compound:
 
     def _compute_2d_coords(self):
         """
-        化合物の2D構造の生成。
-        内部で self.set_coordinates を呼ぶ。
-        input_from_kegg, input_from_knapsack, input_inchi, input_rdkmol,
-        input_molfile それぞれをした時，self.fit2dがFalseだったら呼ばれる。
+        calculates the 2D coordinates, and set them to self by calling self.set_coordinates()
+        This method is called if self.fit2d == False in
+        input_from_kegg, input_from_knapsack, input_inchi, input_rdkmol, and input_molfile.
         """
         AllChem.Compute2DCoords(self.mol)
         self._set_coordinates()
@@ -283,10 +291,10 @@ class Compound:
 
     def _set_coordinates(self):
         """
-        AllChem.Compute2DCoords(self.mol) によって，mol形式のなかで2D座標が計算される。
-        それを，molblock形式に戻した後，self.graphのそれぞれに登録していく。
-        前提として，self._input_molblockが呼ばれているため，self.graph[node]["row"]
-        などは存在している。
+        obtains molblock from self.mol, extracts 2D coordinates from the molblock, and sets them to self.graph.node.
+        Before using this method:
+        - 2D coordinates must be calculated by AllChem.Compute2DCoords(self.mol) or _compute_2d_coords(self)
+        - self._input_molblock() must be called to prepare self.graph[node]["row"] in advance.
         """
         molblock = Chem.MolToMolBlock(self.mol)
         l_molblock = molblock.split("\n")
@@ -302,57 +310,97 @@ class Compound:
 
     def _get_coordinates(self):
         """
-        self.graph.nodesのrow属性にそれぞれmolblockの行が含まれている。
-        その行のうち，0, 1番目に二次元座標が登録されている。
-        それらの二次元座標をネストしたlistとして返す。
+        The "row" attribute of self.graph.nodes contain the row in the atom block in the molblock,
+        where the 0th and 1st columns (0-indexed) contains X and Y coordinates. 
+        This method extracts these 2D coorinates from self.graph.nodes as the nexted list.
         """
         l_rows = [node[1]["row"] for node in self.graph.nodes(data=True)]
         l_coordinates = [list(map(float, row[0:2])) for row in l_rows]
 
         return l_coordinates
 
-    def draw_cpd(self, image_file="mol.png"):
+    def draw_cpd(self, image_file="mol.svg", height=300, width=500, highlightAtoms=[], highlightAtomColors={},
+                  highlightAtomRadii={}):
         """
-        化合物の描画。
-        2D構造が生成されていない場合，生成する。
-        image_file の名前で実行ディレクトリに保存する。
-        """
-        if not self.fit2d:
-            self._compute_2d_coords()
-
-        Draw.MolToFile(self.mol, image_file)
-
-        return True
-
-    def draw_cpd_with_labels(self, start=0, custom_label=None):
-        """
-        ラベル付きの化合物の描画。
-        2D構造が生成されていない場合，生成する。
+        depicts the compound and saves it as image_file in the working directory.
+        If the 2D coordinates are not calculated yet, this method calls self._compute_2d_coords().
         """
         if not self.fit2d:
             self._compute_2d_coords()
 
-        pos = self._get_coordinates()
-        node_color = self._get_node_colors()
+        #Draw.MolToFile(self.mol, image_file)
+        view = rdMolDraw2D.MolDraw2DSVG(height,width)
+        tm = rdMolDraw2D.PrepareMolForDrawing(self.mol)
+        view.SetFontSize(0.9*view.FontSize())
+        option = view.drawOptions()
+        #option.atomLabels[6] = 'N1'
+        #option.atomLabels[8] = 'N2'
+        #option.multipleBondOffset=0.07
+        #option.padding=0.11
+        #option.legendFontSize=20
+        view.DrawMolecule(tm, highlightAtoms=highlightAtoms, highlightAtomColors=highlightAtomColors,
+                  highlightAtomRadii=highlightAtomRadii)
+        view.FinishDrawing()
+        svg = view.GetDrawingText()
+        with open(image_file, 'w') as f:
+            f.write(svg)
+        return SVG(svg.replace('svg:', ''))
+
+    def draw_cpd_with_labels(self, image_file="mol.svg", height=300, width=500, highlightAtoms=[], highlightAtomColors={},
+                  highlightAtomRadii={}, start=0, custom_label=None):
+        """
+        depicts the compound with node labels and saves it as image_file in the working directory.
+        If the 2D coordinates are not calculated yet, this method calls self._compute_2d_coords().
+        """
+        if not self.fit2d:
+            self._compute_2d_coords()
+            
         if custom_label is None:
             node_label = self._get_node_labels(start)
         else:
             node_label = custom_label
-        edge_labels = dict()
-        for edge in self.graph.edges(data=True):
-            edge_labels[(edge[0], edge[1])] = edge[2]["index"]
-        nx.draw(self.graph, pos, node_color=node_color, alpha=0.4)
-        nx.draw_networkx_labels(self.graph, pos, fontsize=6, labels=node_label)
-        nx.draw_networkx_edge_labels(self.graph, pos, edge_labels=edge_labels,
-                                     fontsize=3, font_color="b")
-        plt.draw()
 
-        return True
+        view = rdMolDraw2D.MolDraw2DSVG(height,width)
+        tm = rdMolDraw2D.PrepareMolForDrawing(self.mol)
+        view.SetFontSize(0.9*view.FontSize())
+        option = view.drawOptions()
+        for k, v in sorted(node_label.items()):
+            option.atomLabels[k] = v
+        #option.atomLabels[6] = 'N1'
+        #option.atomLabels[8] = 'N2'
+        #option.multipleBondOffset=0.07
+        #option.padding=0.11
+        #option.legendFontSize=20
+        view.DrawMolecule(tm, highlightAtoms=highlightAtoms, highlightAtomColors=highlightAtomColors,
+                  highlightAtomRadii=highlightAtomRadii)
+        view.FinishDrawing()
+        svg = view.GetDrawingText()
+        with open(image_file, 'w') as f:
+            f.write(svg)
+        return SVG(svg.replace('svg:', ''))
+
+        #pos = self._get_coordinates()
+        #node_color = self._get_node_colors()
+        #if custom_label is None:
+        #    node_label = self._get_node_labels(start)
+        #else:
+        #    node_label = custom_label
+        #edge_labels = dict()
+        #for edge in self.graph.edges(data=True):
+        #    edge_labels[(edge[0], edge[1])] = edge[2]["index"]
+        #nx.draw_networkx(self.graph, pos, node_color=node_color, alpha=0.4)
+        #nx.draw_networkx_labels(self.graph, pos, fontsize=6, labels=node_label)
+        #nx.draw_networkx_edge_labels(self.graph, pos, edge_labels=edge_labels,
+        #                             fontsize=3, font_color="b")
+        #plt.draw()
+
+        #return True
 
     def _get_node_colors(self):
         """
-        それぞれのnodesのsymbolのlistから，
-        listをsortして，重複無しで最初から0-indexのintを振り，そのintとsymbol_listとの対応を返す。
+        obtains the list of the atomic element symbols in self.graph.nodes,
+        sorts the listをsort，gives the 0-indexed integer IDs for the symbols without redundancy,
+        and returns the correspondence list between the integer IDs and the symbol_list.
         """
         symbol_list = \
             [node[1]["symbol"] for node in self.graph.nodes(data=True)]
@@ -372,9 +420,9 @@ class Compound:
 
     def _get_node_labels(self, start=0):
         """
-        nodeのlabelとなるdictを返す。
-        networkxの関係上，dictである必要がある。
-        基本的に，0-indexか1-indexかを調整するためのもの
+        returns dict to show the label of the node.
+        must be a dict for the use of NetworkX.
+        This method is bacially for solving the 0-index and 1-index problem in the molblock.
         """
         d_label = {}
         l_nodes = self.graph.nodes(data=True)
@@ -385,9 +433,8 @@ class Compound:
 
     def find_seq(self, length, bidirectonal=True):
         """
-        self.graph以下に含まれるグラフ構造のうち，length 以下の部分構造を
-        イテレーターとして返す。
-        返される型，nodeのlabelのlist。
+        yields the substructures in self.graph for which the size is smaller than the one defined by length
+        and returns the list of the node lists as an iterator.
         """
         for i in self.graph.nodes():
             for j in self.graph.nodes():
@@ -395,47 +442,46 @@ class Compound:
                     continue
                 if bidirectonal:
                     pass
-                elif i > j:
-                    continue
-                for seq in nx.all_simple_paths(self.graph, i, j,
-                                               cutoff=(length + 1)):
+                elif i >= j:
+                     continue
+                for seq in nx.all_simple_paths(self.graph, i, j, cutoff=(length)):
                     if len(seq) == 2:
                         pass
                     elif len(seq) <= length:
                         yield seq
-                    elif len(seq) == length + 1:
-                        if seq[0] == seq[-1]:
-                            yield seq
-                        continue
+                    if seq[0] in self.graph.adj[seq[-1]].keys():
+                        seq2 = [n for n in seq]
+                        seq2.append(seq[0])
+                        yield seq2
+                    continue
+                            
 
     def has_bond(self, atom_1, atom_2):
         """
-        TODO 入力の型
-        atom_1 と atom_2 の間にedgeがあるか bool で返す。
+        returns True if atom_1 and atom_2 forms a chemical bond, otherwise returns False.
         """
         return atom_1 in self.graph.adj[atom_2].keys()
 
     def get_symbol(self, atom_index):
         """
-        atom の index を受け取って，atomのsymbol を返す。
+        returns the atomic element symbol of the corresponding atom specified by the atom_index.
         """
         return self.graph.node[atom_index]['symbol']
 
     def get_triplets(self):
         """
-        3連続の結合を全て取り出す。
+        returns all the substructures that consists of three nodes (the atoms that are not hydrogen atoms).
         """
-        return self.find_seq(3, bidirectonal=False)
+        return self.find_seq(3, bidirectonal=True)
 
     def get_vicinities(self):
         """
-        隣接している atom のindexを返す。
+        returns all the substructures that consists of a center atom and the attaching atoms as the data strucure as:
         [(0, [1, 2, 3]),
         (1, [3, 4, 5]),
         (2, [3, 4, 5]),
         ...
         ]
-        のような形で返す。
         """
         return [(j, [i for i in nx.all_neighbors(self.graph, j)])
                 for j in self.graph.nodes()]
