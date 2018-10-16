@@ -1119,7 +1119,7 @@ kcfmat.draw_cpds(kcfstringidx=35802)
 
     C8x-C8x-C8y-C8x-C8x-C8y-C1y-C1x-C8y-C8y-C1y-C8y-C8y-C8y-C8x-C8x
 
-![svg](machine_learning_files/machine_learning_32_1.svg)
+![png](machine_learning_files/machine_learning_32_1.png)
 
 - The occurrances of the substructures in the respective compounds can be shown as below:
 
