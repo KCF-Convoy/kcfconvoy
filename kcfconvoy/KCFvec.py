@@ -3,9 +3,9 @@
 from collections import defaultdict
 from copy import deepcopy
 
-import pandas as pd
-
 import networkx as nx
+
+import pandas as pd
 from rdkit import Chem
 
 from .Compound import Compound
@@ -696,7 +696,9 @@ class KCFvec(Compound):
             ele2 = self.get_symbol(edge[1])
             if (ele1 == "C" and ele2 != "C") or (ele1 != "C" and ele2 == "C"):
                 c_graph.remove_edge(edge[0], edge[1])
-        subgraphs = [c_graph.subgraph(c).copy() for c in nx.connected_components(c_graph)]
+        subgraphs = \
+            [c_graph.subgraph(c).copy()
+                for c in nx.connected_components(c_graph)]
         for subgraph in subgraphs:
             if len(subgraph.nodes()) < 4:
                 continue
@@ -964,24 +966,38 @@ class KCFvec(Compound):
             dict1 = dict()
             for string_dicts in [self.subs_string, self.ring_string]:
                 for dict2 in self.subs_string:
-                    #dict1 = dict()
+                    # dict1 = dict()
                     for k, v in dict2.items():
                         if v not in dict1.keys():
                             dict1[v] = []
                         if k not in dict1[v]:
                             dict1[v].append(k)
-                    #ret_list.append(dict1)
+                    # ret_list.append(dict1)
             self._string_2_seq = dict1
         if kcfstring in self._string_2_seq.keys():
             return self._string_2_seq[kcfstring]
         else:
             return []
-    
-    def draw_cpd_with_highlighted_substructure(self, subs_string="C-C-C-C", image_file="mol.svg", height=300, width=500, 
-                                               highlightAtoms=[], highlightAtomColors={}, highlightAtomRadii={}, start=0, custom_label=None):
-        highlightAtoms = list(set([int(atom_idx) for atom_idx in ",".join(self.string2seq(subs_string)).split(",")]))
-        return self.draw_cpd_with_labels(image_file = image_file, height=height, width=width, highlightAtoms=highlightAtoms, \
-                                  highlightAtomColors=highlightAtomColors, highlightAtomRadii=highlightAtomRadii, start=start, custom_label=custom_label)
 
-
-
+    def draw_cpd_with_highlighted_substructure(self,
+                                               subs_string="C-C-C-C",
+                                               image_file="mol.svg",
+                                               height=300,
+                                               width=500,
+                                               highlightAtoms=[],
+                                               highlightAtomColors={},
+                                               highlightAtomRadii={},
+                                               start=0,
+                                               custom_label=None):
+        highlight_atoms = \
+            [int(a_idx)
+                for a_idx in ",".join(self.string2seq(subs_string)).split(",")]
+        highlight_atoms_uniq = list(set(highlight_atoms))
+        return self.draw_cpd_with_labels(image_file=image_file,
+                                         height=height,
+                                         width=width,
+                                         highlightAtoms=highlight_atoms_uniq,
+                                         highlightAtomColors=highlightAtomColors,   # NOQA
+                                         highlightAtomRadii=highlightAtomRadii,
+                                         start=start,
+                                         custom_label=custom_label)

@@ -1,25 +1,23 @@
 # coding: utf-8
 
 import numpy as np
-import re
-#from sklearn.cross_validation import train_test_split # 訓練データとテストデータに分割
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import confusion_matrix # 混合行列
-from sklearn.decomposition import PCA #主成分分析
-from sklearn.linear_model import LogisticRegression # ロジスティック回帰
-from sklearn.linear_model import SGDClassifier
-from sklearn.neighbors import KNeighborsClassifier # K近傍法
-from sklearn.svm import SVC # サポートベクターマシン
-from sklearn.tree import DecisionTreeClassifier # 決定木
-from sklearn.ensemble import RandomForestClassifier # ランダムフォレスト
-from sklearn.ensemble import ExtraTreesClassifier
-from sklearn.ensemble import GradientBoostingClassifier
-from sklearn.ensemble import AdaBoostClassifier # AdaBoost
-from sklearn.naive_bayes import GaussianNB # ナイーブ・ベイズ
-from sklearn.discriminant_analysis import LinearDiscriminantAnalysis as LDA # Linear Discriminant Analysis
-from sklearn.discriminant_analysis import QuadraticDiscriminantAnalysis as QDA # Quadratic Discriminant Analysis
+# Quadratic Discriminant Analysis
+# Linear Discriminant Analysis
+from sklearn.discriminant_analysis import LinearDiscriminantAnalysis as LDA
+from sklearn.discriminant_analysis import QuadraticDiscriminantAnalysis as QDA
+from sklearn.ensemble import AdaBoostClassifier  # AdaBoost
+from sklearn.ensemble import RandomForestClassifier  # ランダムフォレスト
+from sklearn.ensemble import ExtraTreesClassifier, GradientBoostingClassifier
 from sklearn.gaussian_process import GaussianProcessClassifier
+from sklearn.linear_model import LogisticRegression  # ロジスティック回帰
+from sklearn.linear_model import SGDClassifier
+# from sklearn.cross_validation import train_test_split # 訓練データとテストデータに分割
+from sklearn.naive_bayes import GaussianNB  # ナイーブ・ベイズ
+from sklearn.neighbors import KNeighborsClassifier  # K近傍法
 from sklearn.neural_network import MLPClassifier
+from sklearn.svm import SVC  # サポートベクターマシン
+from sklearn.tree import DecisionTreeClassifier  # 決定木
+
 
 def similarity(kcf_vec_1, kcf_vec_2, n_nodes=list(range(99)),
                levels=[0, 1, 2]):
@@ -74,6 +72,7 @@ def similarity(kcf_vec_1, kcf_vec_2, n_nodes=list(range(99)),
         x_21 = both_12 / (only_2 + both_12)
 
     return (x, x_12, x_21)
+
 
 class Classifiers:
     def __init__(self):

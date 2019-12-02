@@ -1,9 +1,11 @@
 # coding: utf-8
 
 import networkx as nx
-from .Compound import Compound
+
 from rdkit import Chem
 from rdkit.Chem import AllChem
+
+from .Compound import Compound
 
 
 class Library:
@@ -108,8 +110,8 @@ class Library:
 
         try:
             inchis = Chem.MolToInchi(cpd.mol)
-        except:
-            #print("error ", name)
+        except Exception:
+            # print("error ", name)
             return False
 
         self.inchis.append(inchis)
