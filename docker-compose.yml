@@ -1,11 +1,9 @@
 version: "3"
 services:
-  kcfconvoy:
-    image: suecharo/kcfconvoy:latest
-    container_name: kcfconvoy
+  app:
+    build: .
+    volumes:
+      - ${PWD}:/opt/kcfconvoy
     ports:
       - 8888:8888
-    environment:
-      TZ: Asia/Tokyo
-    tty: true
     command: ["tail", "-f", "/dev/null"]
