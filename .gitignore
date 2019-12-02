@@ -215,6 +215,7 @@ dmypy.json
 tests/*.mol
 tests/kegg
 tests/knapsack
+tests/mol.svg
 
 jupyter_usecase/*.png
 jupyter_usecase/*.svg
