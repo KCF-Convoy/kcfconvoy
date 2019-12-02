@@ -3,9 +3,8 @@ import os
 import shutil
 import unittest
 
-from rdkit import Chem
-
 from kcfconvoy import KCFmat, KCFvec
+from rdkit import Chem
 
 MOLBLOCK = (
     " \n"

@@ -1,9 +1,8 @@
 # coding: utf-8
 import unittest
 
-from rdkit import Chem
-
 from kcfconvoy import KCFvec, similarity
+from rdkit import Chem
 
 MOLBLOCK = (
     " \n"

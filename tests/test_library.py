@@ -3,9 +3,8 @@ import os
 import shutil
 import unittest
 
-from rdkit import Chem
-
 from kcfconvoy import Library
+from rdkit import Chem
 
 MOLBLOCK = (
     " \n"
@@ -95,8 +94,8 @@ class TestLibrary(unittest.TestCase):
         """
         inchi = ("InChI=1S/C6H8O6/c7-1-2(8)5-3(9)4(10)6(11)12-5/h2,"
                  "5,7-8,10-11H,1H2/t2-,5+/m0/s1")
-        expected = [(0, 1), (0, 6), (1, 4), (1, 7), (2, 3), (2, 4), (2, 8), (3, 5),
-                    (3, 9), (4, 11), (5, 10), (5, 11)]
+        expected = [(0, 1), (0, 6), (1, 4), (1, 7), (2, 3), (2, 4),
+                    (2, 8), (3, 5), (3, 9), (4, 11), (5, 10), (5, 11)]
         lib = Library()
         lib.input_inchi(inchi)
         actual = list(lib.cpds[0].graph.edges())
