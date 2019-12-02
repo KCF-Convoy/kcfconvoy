@@ -7,14 +7,16 @@ with open("requirements.txt") as f:
 with open("README.rst") as f:
     long_desc = f.read()
 
+
 def main():
     setup(
         name="kcfconvoy",
-        version="0.0.4",
+        version="v0.0.5",
         url="https://github.com/KCF-Convoy/kcfconvoy",
         author="maskot1977",
         author_email="maskot@chemsys.t.u-tokyo.ac.jp",
-        description="KCF-Convoy: efficient Python package to convert KCF chemical substructure fingerprints",
+        description="KCF-Convoy: efficient Python package to convert KCF " +
+                    "chemical substructure fingerprints",
         long_description=long_desc,
         license="MIT",
         keywords="bio-Informatics kcf kcfconvoy smiles",
