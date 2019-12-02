@@ -4,14 +4,14 @@ from setuptools import setup
 with open("requirements.txt") as f:
     requirements = f.read().splitlines()
 
-with open("README.rst") as f:
+with open("README.md") as f:
     long_desc = f.read()
 
 
 def main():
     setup(
         name="kcfconvoy",
-        version="v0.0.5",
+        version="0.0.5",
         url="https://github.com/KCF-Convoy/kcfconvoy",
         author="maskot1977",
         author_email="maskot@chemsys.t.u-tokyo.ac.jp",
