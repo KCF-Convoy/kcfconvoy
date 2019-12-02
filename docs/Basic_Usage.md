@@ -484,7 +484,6 @@ img
 
 ![png](https://github.com/KCF-Convoy/kcfconvoy/raw/develop/docs/basic_usage_files/basic_usage_31_0.png)
 
-
 ```python
 kcfmat.draw_cpds()
 ```
