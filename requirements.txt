@@ -1,7 +1,6 @@
 IPython
 matplotlib
-networkx
+networkx==2.3
 numpy
 pandas
-rdkit
 sklearn
