@@ -40,9 +40,13 @@ $ python -m unittest *.py
 
 ## Contact
 
-- Author: maskot@chemsys.t.u-tokyo.ac.jp
+- Author: kotera@preferred.jp
 - Maintainer: suecharo@g.ecc.u-tokyo.ac.jp
 
 ## License
 
 MIT
+
+## Cite
+
+Masayuki Sato, Hirotaka Suetake, Masaaki Kotera (2018) "KCF-Convoy: efficient Python package to convert KEGG Chemical Function and Substructure fingerprints", bioRxiv, doi: https://doi.org/10.1101/452383 
