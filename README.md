@@ -49,4 +49,6 @@ MIT
 
 ## Cite
 
-Masayuki Sato, Hirotaka Suetake, Masaaki Kotera (2018) "KCF-Convoy: efficient Python package to convert KEGG Chemical Function and Substructure fingerprints", bioRxiv, doi: https://doi.org/10.1101/452383 
+- Masayuki Sato, Hirotaka Suetake, Masaaki Kotera (2018) "KCF-Convoy: efficient Python package to convert KEGG Chemical Function and Substructure fingerprints", bioRxiv, doi: https://doi.org/10.1101/452383 
+
+- Kotera, Masaaki, et al. "KCF-S: KEGG Chemical Function and Substructure for improved interpretability and prediction in chemical bioinformatics." BMC systems biology 7.6 (2013): 1-17. doi: https://doi.org/10.1186/1752-0509-7-S6-S2
