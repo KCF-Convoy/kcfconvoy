@@ -5,7 +5,6 @@ import urllib.request
 from copy import copy
 
 import networkx as nx
-
 from IPython.display import SVG
 from rdkit import Chem
 from rdkit.Chem import AllChem
@@ -144,8 +143,7 @@ class Compound:
         if not os.path.isfile("./{}/{}.mol".format(kegg_dir, cid)):
             url = "http://www.genome.jp/dbget-bin/www_bget?-f+m+{}".format(cid)
             print("Downloading ", cid)
-            urllib.request.urlretrieve(url,
-                                       "./{}/{}.mol".format(kegg_dir, cid))
+            urllib.request.urlretrieve(url, "./{}/{}.mol".format(kegg_dir, cid))
 
         return self.input_molfile("./{}/{}.mol".format(kegg_dir, cid))
 
@@ -164,8 +162,7 @@ class Compound:
             os.mkdir("./" + knapsack_dir)
         if not os.path.isfile("./{}/{}.mol".format(knapsack_dir, cid)):
             url = "http://knapsack3d.sakura.ne.jp/mol3d/{}.3d.mol".format(cid)
-            urllib.request.urlretrieve(url,
-                                       "./{}/{}.mol".format(knapsack_dir, cid))
+            urllib.request.urlretrieve(url, "./{}/{}.mol".format(knapsack_dir, cid))
         mol = Chem.MolFromMolFile("./{}/{}.mol".format(knapsack_dir, cid))
         Chem.MolToMolFile(mol, "./{}/{}.mol".format(knapsack_dir, cid))
 
@@ -255,8 +252,7 @@ class Compound:
             line = l_molblock[3]
         except Exception:
             return False
-        self.n_atoms, self.n_bonds = \
-            map(int, [line[:3].strip(), line[3:6].strip()])
+        self.n_atoms, self.n_bonds = map(int, [line[:3].strip(), line[3:6].strip()])
         self.head = l_molblock[3]
 
         index_check_list = []
@@ -270,14 +266,22 @@ class Compound:
             if line[3] == "H":
                 continue
             index_check_list.append(i - 4)
-            self.graph.add_node(
-                len(self.graph.nodes()), symbol=line[3], row=line)
+            self.graph.add_node(len(self.graph.nodes()), symbol=line[3], row=line)
 
         # bond block
         for i in range(4 + self.n_atoms, 4 + self.n_atoms + self.n_bonds):
             line = l_molblock[i]
-            line = list(map(int, [line[:3].strip(), line[3:6].strip(),
-                                  line[6:9].strip(), line[9:12].strip()]))
+            line = list(
+                map(
+                    int,
+                    [
+                        line[:3].strip(),
+                        line[3:6].strip(),
+                        line[6:9].strip(),
+                        line[9:12].strip(),
+                    ],
+                )
+            )
             if line[2] == 2:
                 line[3] = 0
             bondidx = i - 4 - self.n_atoms
@@ -288,12 +292,15 @@ class Compound:
             replaced_list = copy(line)
             replaced_list[0] = index_check_list.index(line[0] - 1) + 1
             replaced_list[1] = index_check_list.index(line[1] - 1) + 1
-            self.graph.add_edge(index_check_list.index(line[0] - 1),
-                                index_check_list.index(line[1] - 1),
-                                order=line[2], index=bondidx,
-                                row=list(map(str, replaced_list)))
+            self.graph.add_edge(
+                index_check_list.index(line[0] - 1),
+                index_check_list.index(line[1] - 1),
+                order=line[2],
+                index=bondidx,
+                row=list(map(str, replaced_list)),
+            )
 
-        for line in l_molblock[:4 + self.n_atoms + self.n_bonds]:
+        for line in l_molblock[: 4 + self.n_atoms + self.n_bonds]:
             if "CHG" in line.split():
                 continue
             self.tails.append(line)
@@ -348,13 +355,15 @@ class Compound:
 
         return l_coordinates
 
-    def draw_cpd(self,
-                 image_file="mol.svg",
-                 height=300,
-                 width=500,
-                 highlightAtoms=[],
-                 highlightAtomColors={},
-                 highlightAtomRadii={}):
+    def draw_cpd(
+        self,
+        image_file="mol.svg",
+        height=300,
+        width=500,
+        highlightAtoms=[],
+        highlightAtomColors={},
+        highlightAtomRadii={},
+    ):
         """
         depicts the compound and saves it as image_file
         in the working directory. If the 2D coordinates are not calculated yet,
@@ -366,32 +375,36 @@ class Compound:
         # Draw.MolToFile(self.mol, image_file)
         view = rdMolDraw2D.MolDraw2DSVG(height, width)
         tm = rdMolDraw2D.PrepareMolForDrawing(self.mol)
-        view.SetFontSize(0.9*view.FontSize())
+        view.SetFontSize(0.9 * view.FontSize())
         # option = view.drawOptions()
         # option.atomLabels[6] = 'N1'
         # option.atomLabels[8] = 'N2'
         # option.multipleBondOffset=0.07
         # option.padding=0.11
         # option.legendFontSize=20
-        view.DrawMolecule(tm,
-                          highlightAtoms=highlightAtoms,
-                          highlightAtomColors=highlightAtomColors,
-                          highlightAtomRadii=highlightAtomRadii)
+        view.DrawMolecule(
+            tm,
+            highlightAtoms=highlightAtoms,
+            highlightAtomColors=highlightAtomColors,
+            highlightAtomRadii=highlightAtomRadii,
+        )
         view.FinishDrawing()
         svg = view.GetDrawingText()
-        with open(image_file, 'w') as f:
+        with open(image_file, "w") as f:
             f.write(svg)
-        return SVG(svg.replace('svg:', ''))
+        return SVG(svg.replace("svg:", ""))
 
-    def draw_cpd_with_labels(self,
-                             image_file="mol.svg",
-                             height=300,
-                             width=500,
-                             highlightAtoms=[],
-                             highlightAtomColors={},
-                             highlightAtomRadii={},
-                             start=0,
-                             custom_label=None):
+    def draw_cpd_with_labels(
+        self,
+        image_file="mol.svg",
+        height=300,
+        width=500,
+        highlightAtoms=[],
+        highlightAtomColors={},
+        highlightAtomRadii={},
+        start=0,
+        custom_label=None,
+    ):
         """
         depicts the compound with node labels and saves it as
         image_file in the working directory. If the 2D coordinates
@@ -407,7 +420,7 @@ class Compound:
 
         view = rdMolDraw2D.MolDraw2DSVG(height, width)
         tm = rdMolDraw2D.PrepareMolForDrawing(self.mol)
-        view.SetFontSize(0.9*view.FontSize())
+        view.SetFontSize(0.9 * view.FontSize())
         option = view.drawOptions()
         for k, v in sorted(node_label.items()):
             option.atomLabels[k] = v
@@ -416,15 +429,17 @@ class Compound:
         # option.multipleBondOffset=0.07
         # option.padding=0.11
         # option.legendFontSize=20
-        view.DrawMolecule(tm,
-                          highlightAtoms=highlightAtoms,
-                          highlightAtomColors=highlightAtomColors,
-                          highlightAtomRadii=highlightAtomRadii)
+        view.DrawMolecule(
+            tm,
+            highlightAtoms=highlightAtoms,
+            highlightAtomColors=highlightAtomColors,
+            highlightAtomRadii=highlightAtomRadii,
+        )
         view.FinishDrawing()
         svg = view.GetDrawingText()
-        with open(image_file, 'w') as f:
+        with open(image_file, "w") as f:
             f.write(svg)
-        return SVG(svg.replace('svg:', ''))
+        return SVG(svg.replace("svg:", ""))
 
         # pos = self._get_coordinates()
         # node_color = self._get_node_colors()
@@ -456,8 +471,7 @@ class Compound:
         symbols without redundancy, and returns the correspondence list
         between the integer IDs and the symbol_list.
         """
-        symbol_list = \
-            [node[1]["symbol"] for node in self.graph.nodes(data=True)]
+        symbol_list = [node[1]["symbol"] for node in self.graph.nodes(data=True)]
 
         count = 0
         d_index = dict()
@@ -500,10 +514,7 @@ class Compound:
                     pass
                 elif i >= j:
                     continue
-                for seq in nx.all_simple_paths(self.graph,
-                                               i,
-                                               j,
-                                               cutoff=(length)):
+                for seq in nx.all_simple_paths(self.graph, i, j, cutoff=(length)):
                     if len(seq) == 2:
                         pass
                     elif len(seq) <= length:
@@ -526,7 +537,7 @@ class Compound:
         returns the atomic element symbol of the corresponding atom
         specified by the atom_index.
         """
-        return self.graph.node[atom_index]['symbol']
+        return self.graph.node[atom_index]["symbol"]
 
     def get_triplets(self):
         """
@@ -545,5 +556,7 @@ class Compound:
         ...
         ]
         """
-        return [(j, [i for i in nx.all_neighbors(self.graph, j)])
-                for j in self.graph.nodes()]
+        return [
+            (j, [i for i in nx.all_neighbors(self.graph, j)])
+            for j in self.graph.nodes()
+        ]

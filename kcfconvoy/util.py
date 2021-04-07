@@ -19,8 +19,7 @@ from sklearn.svm import SVC  # サポートベクターマシン
 from sklearn.tree import DecisionTreeClassifier  # 決定木
 
 
-def similarity(kcf_vec_1, kcf_vec_2, n_nodes=list(range(99)),
-               levels=[0, 1, 2]):
+def similarity(kcf_vec_1, kcf_vec_2, n_nodes=list(range(99)), levels=[0, 1, 2]):
     kegg_atom_levels = ["atom_species", "atom_class", "kegg_atom"]
     kegg_atom_levels = set([kegg_atom_levels[level] for level in levels])
     l_count_1 = []
@@ -93,5 +92,5 @@ class Classifiers:
             ["Linear Discriminant Analysis", LDA()],
             ["Quadratic Discriminant Analysis", QDA()],
             ["Gaussian Process", GaussianProcessClassifier()],
-            ["Multi-Layer Perceptron", MLPClassifier()]
+            ["Multi-Layer Perceptron", MLPClassifier()],
         ]

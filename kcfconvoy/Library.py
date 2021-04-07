@@ -1,7 +1,6 @@
 # coding: utf-8
 
 import networkx as nx
-
 from rdkit import Chem
 from rdkit.Chem import AllChem
 
@@ -91,8 +90,8 @@ class Library:
                 fp = AllChem.GetMorganFingerprintAsBitVect(cpd.mol, 2)
             elif fingerprint == "LayeredFingerprint":
                 fp = Chem.LayeredFingerprint(
-                    cpd.mol,
-                    layerFlags=Chem.LayeredFingerprint_substructLayers)
+                    cpd.mol, layerFlags=Chem.LayeredFingerprint_substructLayers
+                )
             elif fingerprint == "PatternFingerprint":
                 fp = Chem.PatternFingerprint(cpd.mol, fpSize=1024)
 
