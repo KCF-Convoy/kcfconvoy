@@ -1,0 +1,12 @@
+include README.md
+include README.rst
+include LICENSE
+include MANIFEST.in
+include requirements.txt
+include conda-env.yml
+include setup.py
+recursive-include kcfconvoy *
+recursive-include include tests *
+recursive-include docs *
+recursive-include jupyter_usecase *
+global-exclude *.pyc *~ *.bak *.swp *.pyo

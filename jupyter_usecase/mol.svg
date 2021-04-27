@@ -1,0 +1,118 @@
+<?xml version='1.0' encoding='iso-8859-1'?>
+<svg:svg version='1.1' baseProfile='full'
+              xmlns:svg='http://www.w3.org/2000/svg'
+                      xmlns:rdkit='http://www.rdkit.org/xml'
+                      xmlns:xlink='http://www.w3.org/1999/xlink'
+                  xml:space='preserve'
+width='300px' height='500px' >
+<svg:rect style='opacity:1.0;fill:#FFFFFF;stroke:none' width='300' height='500' x='0' y='0'> </svg:rect>
+<svg:path d='M 166.644,244.287 149.428,238.727' style='fill:none;fill-rule:evenodd;stroke:#FF7F7F;stroke-width:8px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1' />
+<svg:path d='M 149.428,238.727 135.945,250.915' style='fill:none;fill-rule:evenodd;stroke:#FF7F7F;stroke-width:8px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1' />
+<svg:ellipse cx='166.644' cy='244.287' rx='5.21484' ry='5.21484' style='fill:#FF7F7F;fill-rule:evenodd;stroke:#FF7F7F;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1' />
+<svg:ellipse cx='149.428' cy='238.727' rx='5.21484' ry='5.21484' style='fill:#FF7F7F;fill-rule:evenodd;stroke:#FF7F7F;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1' />
+<svg:ellipse cx='135.945' cy='250.915' rx='5.21484' ry='5.21484' style='fill:#FF7F7F;fill-rule:evenodd;stroke:#FF7F7F;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1' />
+<svg:path d='M 216.948,242.573 219.628,244.439' style='fill:none;fill-rule:evenodd;stroke:#0000FF;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1' />
+<svg:path d='M 219.628,244.439 222.308,246.305' style='fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1' />
+<svg:path d='M 206.473,241.66 204.354,242.345' style='fill:none;fill-rule:evenodd;stroke:#0000FF;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1' />
+<svg:path d='M 204.354,242.345 202.234,243.029' style='fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1' />
+<svg:path d='M 213.741,236.706 215.857,230.536' style='fill:none;fill-rule:evenodd;stroke:#0000FF;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1' />
+<svg:path d='M 215.857,230.536 217.973,224.366' style='fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1' />
+<svg:path d='M 230.515,246.305 238.603,240.364' style='fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1' />
+<svg:path d='M 229.412,242.262 235.074,238.103' style='fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1' />
+<svg:path d='M 226.811,252.172 227.435,258.495' style='fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1' />
+<svg:path d='M 227.435,258.495 228.059,264.818' style='fill:none;fill-rule:evenodd;stroke:#0000FF;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1' />
+<svg:path d='M 192.055,242.116 188.546,239.488' style='fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1' />
+<svg:path d='M 188.546,239.488 185.036,236.86' style='fill:none;fill-rule:evenodd;stroke:#FF0000;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1' />
+<svg:path d='M 194.959,247.983 191.352,258.418' style='fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1' />
+<svg:path d='M 225.24,221.458 228.426,221.471' style='fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1' />
+<svg:path d='M 228.426,221.471 231.612,221.484' style='fill:none;fill-rule:evenodd;stroke:#0000FF;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1' />
+<svg:path d='M 226.18,225.373 228.41,225.382' style='fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1' />
+<svg:path d='M 228.41,225.382 230.64,225.391' style='fill:none;fill-rule:evenodd;stroke:#0000FF;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1' />
+<svg:path d='M 248.857,240.169 252.713,241.855' style='fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1' />
+<svg:path d='M 241.726,234.498 240.234,229.47' style='fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1' />
+<svg:path d='M 240.234,229.47 238.743,224.442' style='fill:none;fill-rule:evenodd;stroke:#0000FF;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1' />
+<svg:path d='M 234.61,270.548 236.958,271.597' style='fill:none;fill-rule:evenodd;stroke:#0000FF;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1' />
+<svg:path d='M 236.958,271.597 239.306,272.646' style='fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1' />
+<svg:path d='M 236.91,267.292 238.553,268.026' style='fill:none;fill-rule:evenodd;stroke:#0000FF;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1' />
+<svg:path d='M 238.553,268.026 240.197,268.761' style='fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1' />
+<svg:path d='M 177.02,236.86 173.881,239.107' style='fill:none;fill-rule:evenodd;stroke:#FF0000;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1' />
+<svg:path d='M 173.881,239.107 170.742,241.354' style='fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1' />
+<svg:path d='M 184.077,261.351 178.543,261.351' style='fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1' />
+<svg:path d='M 192.414,264.285 195.593,268.779' style='fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1' />
+<svg:path d='M 195.593,268.779 198.773,273.273' style='fill:none;fill-rule:evenodd;stroke:#FF0000;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1' />
+<svg:path d='M 259.298,247.526 260.04,254.266' style='fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1' />
+<svg:path d='M 260.04,254.266 260.783,261.007' style='fill:none;fill-rule:evenodd;stroke:#0000FF;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1' />
+<svg:path d='M 255.633,249.976 256.153,254.695' style='fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1' />
+<svg:path d='M 256.153,254.695 256.673,259.413' style='fill:none;fill-rule:evenodd;stroke:#0000FF;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1' />
+<svg:path d='M 262.927,241.659 266.211,239.222' style='fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1' />
+<svg:path d='M 266.211,239.222 269.495,236.784' style='fill:none;fill-rule:evenodd;stroke:#0000FF;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1' />
+<svg:path d='M 249.53,272.51 253.337,269.692' style='fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1' />
+<svg:path d='M 253.337,269.692 257.143,266.874' style='fill:none;fill-rule:evenodd;stroke:#0000FF;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1' />
+<svg:path d='M 160.383,242.265 155.886,240.813' style='fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1' />
+<svg:path d='M 167.614,247.22 171.313,258.418' style='fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1' />
+<svg:path d='M 171.295,264.285 169.387,269.959' style='fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1' />
+<svg:path d='M 169.387,269.959 167.478,275.634' style='fill:none;fill-rule:evenodd;stroke:#FF0000;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1' />
+<svg:path d='M 146.183,241.66 142.686,244.821' style='fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1' />
+<svg:path d='M 142.686,244.821 139.19,247.982' style='fill:none;fill-rule:evenodd;stroke:#FF0000;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1' />
+<svg:path d='M 129.289,250.915 126.608,250.915' style='fill:none;fill-rule:evenodd;stroke:#FF0000;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1' />
+<svg:path d='M 126.608,250.915 123.926,250.915' style='fill:none;fill-rule:evenodd;stroke:#FF7F00;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1' />
+<svg:path d='M 111.397,250.915 108.656,250.915' style='fill:none;fill-rule:evenodd;stroke:#FF7F00;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1' />
+<svg:path d='M 108.656,250.915 105.915,250.915' style='fill:none;fill-rule:evenodd;stroke:#FF0000;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1' />
+<svg:path d='M 117.649,253.849 117.624,260.018' style='fill:none;fill-rule:evenodd;stroke:#FF7F00;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1' />
+<svg:path d='M 117.624,260.018 117.599,266.188' style='fill:none;fill-rule:evenodd;stroke:#FF0000;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1' />
+<svg:path d='M 119.605,247.974 119.58,241.803' style='fill:none;fill-rule:evenodd;stroke:#FF7F00;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1' />
+<svg:path d='M 119.58,241.803 119.555,235.633' style='fill:none;fill-rule:evenodd;stroke:#FF0000;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1' />
+<svg:path d='M 115.694,247.99 115.669,241.819' style='fill:none;fill-rule:evenodd;stroke:#FF7F00;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1' />
+<svg:path d='M 115.669,241.819 115.644,235.649' style='fill:none;fill-rule:evenodd;stroke:#FF0000;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1' />
+<svg:path d='M 92.9982,250.888 90.2551,250.876' style='fill:none;fill-rule:evenodd;stroke:#FF0000;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1' />
+<svg:path d='M 90.2551,250.876 87.5121,250.865' style='fill:none;fill-rule:evenodd;stroke:#FF7F00;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1' />
+<svg:path d='M 74.9829,250.838 72.2419,250.838' style='fill:none;fill-rule:evenodd;stroke:#FF7F00;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1' />
+<svg:path d='M 72.2419,250.838 69.5008,250.838' style='fill:none;fill-rule:evenodd;stroke:#FF0000;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1' />
+<svg:path d='M 81.2356,253.772 81.2104,259.942' style='fill:none;fill-rule:evenodd;stroke:#FF7F00;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1' />
+<svg:path d='M 81.2104,259.942 81.1852,266.113' style='fill:none;fill-rule:evenodd;stroke:#FF0000;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1' />
+<svg:path d='M 83.1912,247.897 83.1659,241.689' style='fill:none;fill-rule:evenodd;stroke:#FF7F00;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1' />
+<svg:path d='M 83.1659,241.689 83.1407,235.48' style='fill:none;fill-rule:evenodd;stroke:#FF0000;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1' />
+<svg:path d='M 79.2801,247.913 79.2548,241.705' style='fill:none;fill-rule:evenodd;stroke:#FF7F00;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1' />
+<svg:path d='M 79.2548,241.705 79.2296,235.496' style='fill:none;fill-rule:evenodd;stroke:#FF0000;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1' />
+<svg:path d='M 56.5842,250.812 53.8041,250.8' style='fill:none;fill-rule:evenodd;stroke:#FF0000;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1' />
+<svg:path d='M 53.8041,250.8 51.0239,250.789' style='fill:none;fill-rule:evenodd;stroke:#FF7F00;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1' />
+<svg:path d='M 44.7471,253.696 44.7215,259.866' style='fill:none;fill-rule:evenodd;stroke:#FF7F00;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1' />
+<svg:path d='M 44.7215,259.866 44.6958,266.036' style='fill:none;fill-rule:evenodd;stroke:#FF0000;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1' />
+<svg:path d='M 38.4947,250.71 35.753,250.687' style='fill:none;fill-rule:evenodd;stroke:#FF7F00;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1' />
+<svg:path d='M 35.753,250.687 33.0113,250.664' style='fill:none;fill-rule:evenodd;stroke:#FF0000;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1' />
+<svg:path d='M 46.7027,247.821 46.677,241.613' style='fill:none;fill-rule:evenodd;stroke:#FF7F00;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1' />
+<svg:path d='M 46.677,241.613 46.6513,235.405' style='fill:none;fill-rule:evenodd;stroke:#FF0000;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1' />
+<svg:path d='M 42.7916,247.837 42.7659,241.629' style='fill:none;fill-rule:evenodd;stroke:#FF7F00;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1' />
+<svg:path d='M 42.7659,241.629 42.7402,235.421' style='fill:none;fill-rule:evenodd;stroke:#FF0000;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1' />
+<svg:text x='206.473' y='242.573' style='font-size:5px;font-style:normal;font-weight:normal;fill-opacity:1;stroke:none;font-family:sans-serif;text-anchor:start;fill:#0000FF' ><svg:tspan>N4y</svg:tspan></svg:text>
+<svg:text x='220.26' y='252.172' style='font-size:5px;font-style:normal;font-weight:normal;fill-opacity:1;stroke:none;font-family:sans-serif;text-anchor:start;fill:#000000' ><svg:tspan>C8y</svg:tspan></svg:text>
+<svg:text x='189.712' y='247.983' style='font-size:5px;font-style:normal;font-weight:normal;fill-opacity:1;stroke:none;font-family:sans-serif;text-anchor:start;fill:#000000' ><svg:tspan>C1y</svg:tspan></svg:text>
+<svg:text x='212.718' y='224.366' style='font-size:5px;font-style:normal;font-weight:normal;fill-opacity:1;stroke:none;font-family:sans-serif;text-anchor:start;fill:#000000' ><svg:tspan>C8x</svg:tspan></svg:text>
+<svg:text x='236.335' y='240.364' style='font-size:5px;font-style:normal;font-weight:normal;fill-opacity:1;stroke:none;font-family:sans-serif;text-anchor:start;fill:#000000' ><svg:tspan>C8y</svg:tspan></svg:text>
+<svg:text x='222.088' y='270.685' style='font-size:5px;font-style:normal;font-weight:normal;fill-opacity:1;stroke:none;font-family:sans-serif;text-anchor:start;fill:#0000FF' ><svg:tspan>N5x</svg:tspan></svg:text>
+<svg:text x='174.66' y='236.86' style='font-size:5px;font-style:normal;font-weight:normal;fill-opacity:1;stroke:none;font-family:sans-serif;text-anchor:start;fill:#FF0000' ><svg:tspan>O2x</svg:tspan></svg:text>
+<svg:text x='184.077' y='264.285' style='font-size:5px;font-style:normal;font-weight:normal;fill-opacity:1;stroke:none;font-family:sans-serif;text-anchor:start;fill:#000000' ><svg:tspan>C1y</svg:tspan></svg:text>
+<svg:text x='231.612' y='224.442' style='font-size:5px;font-style:normal;font-weight:normal;fill-opacity:1;stroke:none;font-family:sans-serif;text-anchor:start;fill:#0000FF' ><svg:tspan>N5x</svg:tspan></svg:text>
+<svg:text x='252.713' y='247.526' style='font-size:5px;font-style:normal;font-weight:normal;fill-opacity:1;stroke:none;font-family:sans-serif;text-anchor:start;fill:#000000' ><svg:tspan>C8y</svg:tspan></svg:text>
+<svg:text x='239.306' y='278.377' style='font-size:5px;font-style:normal;font-weight:normal;fill-opacity:1;stroke:none;font-family:sans-serif;text-anchor:start;fill:#000000' ><svg:tspan>C8x</svg:tspan></svg:text>
+<svg:text x='160.383' y='247.22' style='font-size:5px;font-style:normal;font-weight:normal;fill-opacity:1;stroke:none;font-family:sans-serif;text-anchor:start;fill:#000000' ><svg:tspan>C1y</svg:tspan></svg:text>
+<svg:text x='166.021' y='264.285' style='font-size:5px;font-style:normal;font-weight:normal;fill-opacity:1;stroke:none;font-family:sans-serif;text-anchor:start;fill:#000000' ><svg:tspan>C1y</svg:tspan></svg:text>
+<svg:text x='194.193' y='279.139' style='font-size:5px;font-style:normal;font-weight:normal;fill-opacity:1;stroke:none;font-family:sans-serif;text-anchor:start;fill:#FF0000' ><svg:tspan>O1a</svg:tspan></svg:text>
+<svg:text x='254.845' y='266.874' style='font-size:5px;font-style:normal;font-weight:normal;fill-opacity:1;stroke:none;font-family:sans-serif;text-anchor:start;fill:#0000FF' ><svg:tspan>N5x</svg:tspan></svg:text>
+<svg:text x='266.989' y='236.784' style='font-size:5px;font-style:normal;font-weight:normal;fill-opacity:1;stroke:none;font-family:sans-serif;text-anchor:start;fill:#0000FF' ><svg:tspan>N1a</svg:tspan></svg:text>
+<svg:text x='142.969' y='241.66' style='font-size:5px;font-style:normal;font-weight:normal;fill-opacity:1;stroke:none;font-family:sans-serif;text-anchor:start;fill:#000000' ><svg:tspan>C1b</svg:tspan></svg:text>
+<svg:text x='159.836' y='281.5' style='font-size:5px;font-style:normal;font-weight:normal;fill-opacity:1;stroke:none;font-family:sans-serif;text-anchor:start;fill:#FF0000' ><svg:tspan>O1a</svg:tspan></svg:text>
+<svg:text x='129.289' y='253.849' style='font-size:5px;font-style:normal;font-weight:normal;fill-opacity:1;stroke:none;font-family:sans-serif;text-anchor:start;fill:#FF0000' ><svg:tspan>O2b</svg:tspan></svg:text>
+<svg:text x='111.397' y='253.849' style='font-size:5px;font-style:normal;font-weight:normal;fill-opacity:1;stroke:none;font-family:sans-serif;text-anchor:start;fill:#FF7F00' ><svg:tspan>P1b</svg:tspan></svg:text>
+<svg:text x='92.9982' y='253.849' style='font-size:5px;font-style:normal;font-weight:normal;fill-opacity:1;stroke:none;font-family:sans-serif;text-anchor:start;fill:#FF0000' ><svg:tspan>O2c</svg:tspan></svg:text>
+<svg:text x='111.129' y='272.055' style='font-size:5px;font-style:normal;font-weight:normal;fill-opacity:1;stroke:none;font-family:sans-serif;text-anchor:start;fill:#FF0000' ><svg:tspan>O1c</svg:tspan></svg:text>
+<svg:text x='111.129' y='235.641' style='font-size:5px;font-style:normal;font-weight:normal;fill-opacity:1;stroke:none;font-family:sans-serif;text-anchor:start;fill:#FF0000' ><svg:tspan>O1c</svg:tspan></svg:text>
+<svg:text x='74.9829' y='253.772' style='font-size:5px;font-style:normal;font-weight:normal;fill-opacity:1;stroke:none;font-family:sans-serif;text-anchor:start;fill:#FF7F00' ><svg:tspan>P1b</svg:tspan></svg:text>
+<svg:text x='56.5842' y='253.772' style='font-size:5px;font-style:normal;font-weight:normal;fill-opacity:1;stroke:none;font-family:sans-serif;text-anchor:start;fill:#FF0000' ><svg:tspan>O2c</svg:tspan></svg:text>
+<svg:text x='74.7149' y='271.979' style='font-size:5px;font-style:normal;font-weight:normal;fill-opacity:1;stroke:none;font-family:sans-serif;text-anchor:start;fill:#FF0000' ><svg:tspan>O1c</svg:tspan></svg:text>
+<svg:text x='74.7149' y='235.488' style='font-size:5px;font-style:normal;font-weight:normal;fill-opacity:1;stroke:none;font-family:sans-serif;text-anchor:start;fill:#FF0000' ><svg:tspan>O1c</svg:tspan></svg:text>
+<svg:text x='38.4947' y='253.696' style='font-size:5px;font-style:normal;font-weight:normal;fill-opacity:1;stroke:none;font-family:sans-serif;text-anchor:start;fill:#FF7F00' ><svg:tspan>P1b</svg:tspan></svg:text>
+<svg:text x='38.2254' y='271.902' style='font-size:5px;font-style:normal;font-weight:normal;fill-opacity:1;stroke:none;font-family:sans-serif;text-anchor:start;fill:#FF0000' ><svg:tspan>O1c</svg:tspan></svg:text>
+<svg:text x='20.0947' y='253.543' style='font-size:5px;font-style:normal;font-weight:normal;fill-opacity:1;stroke:none;font-family:sans-serif;text-anchor:start;fill:#FF0000' ><svg:tspan>O1c</svg:tspan></svg:text>
+<svg:text x='38.2254' y='235.413' style='font-size:5px;font-style:normal;font-weight:normal;fill-opacity:1;stroke:none;font-family:sans-serif;text-anchor:start;fill:#FF0000' ><svg:tspan>O1c</svg:tspan></svg:text>
+</svg:svg>

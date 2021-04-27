@@ -1,0 +1,12 @@
+language: python
+python:
+    - 3.6
+    - 3.8
+script:
+    - pytest tests/test_KCFmat.py
+    - pytest tests/test_KCFvec.py
+    - pytest tests/test_compound.py
+    - pytest tests/test_library.py
+    - pytest tests/test_util.py
+notifications:
+  slack: kotlab-ut:YWpko9C0o3LpuO97w8gV0bRp

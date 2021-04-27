@@ -1,7 +1,19 @@
 # coding: utf-8
 
 import numpy as np
-
+import re
+#from sklearn.cross_validation import train_test_split # 訓練データとテストデータに分割
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import confusion_matrix # 混合行列
+from sklearn.decomposition import PCA #主成分分析
+from sklearn.linear_model import LogisticRegression # ロジスティック回帰
+from sklearn.tree import DecisionTreeClassifier # 決定木
+from sklearn.ensemble import RandomForestClassifier # ランダムフォレスト
+from sklearn.ensemble import ExtraTreesClassifier
+from sklearn.ensemble import GradientBoostingClassifier
+from sklearn.ensemble import AdaBoostClassifier # AdaBoost
+from sklearn.naive_bayes import GaussianNB # ナイーブ・ベイズ
+from sklearn.neural_network import MLPClassifier
 
 def similarity(kcf_vec_1, kcf_vec_2, n_nodes=list(range(99)),
                levels=[0, 1, 2]):
@@ -56,3 +68,16 @@ def similarity(kcf_vec_1, kcf_vec_2, n_nodes=list(range(99)),
         x_21 = both_12 / (only_2 + both_12)
 
     return (x, x_12, x_21)
+
+class Classifiers:
+    def __init__(self):
+        self.classifiers = [
+            ["Random Forest", RandomForestClassifier()],
+            ["Logistic Regression", LogisticRegression()],
+            ["Decision Tree", DecisionTreeClassifier()],
+            ["Extra Tree", ExtraTreesClassifier()],
+            ["Gradient Boosting", GradientBoostingClassifier()],
+            ["AdaBoost", AdaBoostClassifier()],
+            ["Naive Bayes", GaussianNB()],
+            ["Multi-Layer Perceptron", MLPClassifier()]
+        ]
