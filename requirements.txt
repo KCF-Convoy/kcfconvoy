@@ -1,6 +1,6 @@
 IPython
 matplotlib
-networkx==2.3
+networkx>=2.3
 numpy
 pandas
 sklearn
