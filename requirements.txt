@@ -3,4 +3,5 @@ matplotlib
 networkx>=2.3
 numpy
 pandas
-sklearn
+scikit-learn
+jedi==0.17.2
